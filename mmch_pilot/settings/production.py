@@ -152,7 +152,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "herokuapp",
     "django_twilio",
-
+    "sms",
     "questions",
 )
 
