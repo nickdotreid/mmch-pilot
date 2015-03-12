@@ -153,7 +153,7 @@ INSTALLED_APPS = (
     "herokuapp",
     "django_twilio",
 
-    "question",
+    "questions",
 )
 
 
