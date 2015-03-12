@@ -17,3 +17,6 @@ Thumbs.db
 /.anvil
 db
 env
+.sass-cache
+bower_components
+node_modules

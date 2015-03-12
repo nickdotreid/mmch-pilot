@@ -1,0 +1,24 @@
+{
+  "name": "mmch-pilot",
+  "version": "0.1.0",
+  "homepage": "https://github.com/nickdotreid/mmch-pilot",
+  "authors": [
+    "Nick Reid <nickreid@nickreid.com>"
+  ],
+  "description": "Maternal Child Health Pilot App",
+  "moduleType": [
+    "globals"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap-sass-official": "~3.3.3",
+    "fontawesome": "~4.3.0"
+  }
+}
