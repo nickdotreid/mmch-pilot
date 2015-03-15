@@ -154,6 +154,7 @@ INSTALLED_APPS = (
     "django_twilio",
     "sms",
     "questions",
+    "homepage",
 )
 
 

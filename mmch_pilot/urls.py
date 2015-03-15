@@ -13,5 +13,6 @@ urlpatterns = patterns("",
     
     # There's no favicon here!
     url(r"^favicon.ico$", generic.RedirectView.as_view()),
-    
+    url('^', include('django.contrib.auth.urls')),
+    url(r'^','homepage.views.home'),
 )
