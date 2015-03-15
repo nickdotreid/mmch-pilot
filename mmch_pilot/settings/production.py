@@ -152,6 +152,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "herokuapp",
     "django_twilio",
+    "crispy_forms",
     "sms",
     "questions",
     "homepage",
@@ -213,6 +214,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.contrib.messages.context_processors.messages",
 )
 
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 # Namespace for cache keys, if using a process-shared cache.
 
