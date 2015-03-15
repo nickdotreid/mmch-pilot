@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<div id="question-{{question.id}}" class="question">
+		<p class="question-text">{{question.text}}</p>
+		<p class="meta">{{question.user}} on {{question.posted}}</p>
+	</div>
+	<div class="answers-list">
+		{% for answer in answers  %}
+		<div class="answer">
+			<p class="answer-text text">{{answer.text}}</p>
+			<p class="meta">{{answer.user}} on {{answer.posted}}</p>
+		</div>
+		{% endfor %}
+	</div>
+{% endblock content %}
