@@ -39,7 +39,8 @@ class RegisterForm(forms.Form):
 # Create your views here.
 def home(request):
     return render_to_response('homepage.html',{
-
+        'login_form':LoginForm(),
+        'register_form':RegisterForm(),
         },
         context_instance = RequestContext(request),
         )

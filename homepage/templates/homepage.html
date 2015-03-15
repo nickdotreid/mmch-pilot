@@ -1,6 +1,20 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 <h1>Welcome to the mMCH pilot!</h1>
-<p>There is nothing much to see here... come back soon!</p>
+<div role="tabpanel">
+	<ul class="nav nav-tabs" role="tablist">
+		<li role="presentation" class="active"><a href="#login" role="tab" data-toggle="tab">Login</a></li>
+		<li role="presentation" ><a href="#register" role="tab" data-toggle="tab">Register</a></li>
+	</ul>
+	<div class="tab-content">
+		<div role="tabpanel" class="tab-pane active" id="login">
+			{% crispy login_form %}
+		</div>
+		<div role="tabpanel" class="tab-pane" id="register">
+			{% crispy register_form %}
+		</div>
+	</div>
+</div>
 {% endblock %}

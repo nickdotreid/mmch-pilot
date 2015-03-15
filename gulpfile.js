@@ -1,6 +1,9 @@
 var gulp = require('gulp'), 
+	addsrc = require('gulp-add-src')
     sass = require('gulp-ruby-sass') 
     notify = require("gulp-notify") 
+    concat = require('gulp-concat')
+    uglify = require('gulp-uglify'),
     bower = require('gulp-bower');
 
 var config = {
@@ -30,9 +33,18 @@ gulp.task('css', function() { 
          .pipe(gulp.dest('./mmch_pilot/static/css')); 
 });
 
+gulp.task('js', function(){
+	gulp.src('')
+		.pipe(addsrc(config.bowerDir+'/jquery/dist/jquery.js'))
+		.pipe(addsrc(config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js'))
+		.pipe(uglify())
+		.pipe(concat("vendor.min.js"))
+		.pipe(gulp.dest('./mmch_pilot/static/js'));
+});
+
 // Rerun the task when a file changes
  gulp.task('watch', function() {
      gulp.watch(config.sassPath + '/**/*.scss', ['css']); 
 });
 
-  gulp.task('default', ['bower', 'icons', 'css']);
+  gulp.task('default', ['bower', 'icons', 'css', 'js']);
