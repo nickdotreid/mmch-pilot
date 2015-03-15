@@ -2,7 +2,7 @@
 
 {% block content %}
 	<h1>Questions</h1>
-	<a href="#" class="btn btn-default">Add a new question</a>
+	<a href="{% url 'questions.views.create' %}" class="btn btn-default">Add a new question</a>
 	{% for question in questions %}
 		<div id="question-{{question.id}}" class="question">
 			<p class="question-text">{{question.text}}</p>
