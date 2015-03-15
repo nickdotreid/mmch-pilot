@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+	<h1>Questions</h1>
+	<a href="#" class="btn btn-default">Add a new question</a>
+	{% for question in questions %}
+		<div class="question">
+			<p class="question-text">{{question.text}}</p>
+			<p class="meta">{{question.user}} on {{question.posted}}</p>
+		</div>
+	{% endfor %}
+{% endblock content %}
