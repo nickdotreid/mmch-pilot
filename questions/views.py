@@ -18,9 +18,22 @@ class QuestionForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(QuestionForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.form_action = reverse(create)
+        self.helper.form_action = reverse(create)
 
         self.helper.add_input(Submit('submit', 'Ask Question'))
+
+class AnswerForm(forms.Form):
+    text = forms.CharField(widget=forms.Textarea)
+
+    def __init__(self, *args, **kwargs):
+        self.question = kwargs.pop('question', False)
+        super(AnswerForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        if self.question:
+            self.helper.form_action = reverse(answer, kwargs={
+                'question_id':self.question.id,
+                })
+        self.helper.add_input(Submit('submit', 'Add an answer'))
 
 @login_required(login_url='login')
 def create(request):
@@ -54,4 +67,27 @@ def detail(request, question_id):
     return render_to_response('questions/detail.html',{
         'question':question,
         'answers':question.answers.all(),
+        'answer_form': AnswerForm(question = question),
+        }, context_instance = RequestContext(request))
+
+@login_required(login_url='login')
+def answer(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    form = AnswerForm(question = question)
+    if request.POST:
+        form = AnswerForm(request.POST, question = question)
+        if form.is_valid():
+            answer = Answer(
+                text = form.cleaned_data['text'],
+                user = request.user,
+                question = question,
+                )
+            answer.save()
+            return redirect('/questions/%d' % (question.id)) #hack to make it work
+            return redirect(detail, kwargs={
+                'question_id':question.id,
+                })
+    return render_to_response('questions/answer.html',{
+        'question':question,
+        'form':form,
         }, context_instance = RequestContext(request))

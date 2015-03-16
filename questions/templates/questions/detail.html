@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block content %}
 	<div id="question-{{question.id}}" class="question">
@@ -13,4 +14,5 @@
 		</div>
 		{% endfor %}
 	</div>
+	{% crispy answer_form %}
 {% endblock content %}

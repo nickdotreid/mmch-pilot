@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+	<div id="question-{{question.id}}" class="question">
+		<p class="question-text text">{{question.text}}</p>
+		<p class="meta">{{question.user}} on {{question.posted}}</p>
+	</div>
+	{% crispy form %}
+{% endblock content %}
