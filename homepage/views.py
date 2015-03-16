@@ -19,7 +19,7 @@ class LoginForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.form_action = reverse(login)
+        self.helper.form_action = reverse(login)
 
         self.helper.add_input(Submit('submit', 'Login'))
 
@@ -31,7 +31,7 @@ class RegisterForm(forms.Form):
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
-        self.form_action = reverse(register)
+        self.helper.form_action = reverse(register)
 
         self.helper.add_input(Submit('submit', 'Register'))
 
