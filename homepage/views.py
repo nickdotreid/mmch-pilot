@@ -38,6 +38,8 @@ class RegisterForm(forms.Form):
 
 # Create your views here.
 def home(request):
+    if request.user.is_authenticated():
+        return redirect(reverse('questions_list'))
     return render_to_response('homepage.html',{
         'login_form':LoginForm(),
         'register_form':RegisterForm(),
