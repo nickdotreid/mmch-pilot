@@ -11,6 +11,14 @@ from sms.models import Number
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
+class CustomPhoneNumber(PhoneNumberField):
+
+    def to_python(self, value):
+        value = ''.join([c for c in value if c in '1234567890'])
+        # Add country code
+        print "####### Number is %s  #######" % (value)
+        return super(PhoneNumberField, self).to_python(value)
+
 class LoginForm(forms.Form):
 
     email = forms.EmailField()
@@ -25,7 +33,7 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     email = forms.EmailField()
-    phone_number = PhoneNumberField()
+    phone_number = CustomPhoneNumber()
     password = forms.CharField(widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
