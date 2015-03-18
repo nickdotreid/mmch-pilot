@@ -9,7 +9,7 @@ from phonenumber_field.formfields import PhoneNumberField
 
 from sms.models import Number
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login as auth_login
+from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
 
 class LoginForm(forms.Form):
 
@@ -68,6 +68,10 @@ def login(request):
     return render_to_response('main/login.html',{
         'form':form,
         }, context_instance = RequestContext(request))
+
+def logout(request):
+    auth_logout(request)
+    return redirect('/')
 
 def register(request):
     form = RegisterForm()
