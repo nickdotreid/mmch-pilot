@@ -67,6 +67,9 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 
 STATICFILES_STORAGE = "require_s3.storage.OptimizedCachedStaticFilesStorage"
 
+# Telephony Settings.
+DEFAULT_COUNTRY_CODE = os.environ.get("DEFAULT_COUNTRY_CODE", "+1")
+
 
 # Amazon S3 settings.
 

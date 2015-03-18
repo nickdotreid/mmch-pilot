@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext 
@@ -14,8 +16,12 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 class CustomPhoneNumber(PhoneNumberField):
 
     def to_python(self, value):
-        value = ''.join([c for c in value if c in '1234567890'])
-        # Add country code
+        value = ''.join([c for c in value if c in '+1234567890'])
+        if '+' not in value:
+            try:
+                value = settings.DEFAULT_COUNTRY_CODE + value
+            except:
+                pass
         print "####### Number is %s  #######" % (value)
         return super(PhoneNumberField, self).to_python(value)
 
