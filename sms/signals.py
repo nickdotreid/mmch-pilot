@@ -14,6 +14,6 @@ def answer_alert_asker(sender, **kwargs):
     client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     message = client.messages.create(
         body=answer.text,
-        to= answer.user.numbers.first().phone_number.as_e164,
+        to= answer.question.user.numbers.first().phone_number.as_e164,
         from_=settings.TWILIO_DEFAULT_CALLERID,
     )
