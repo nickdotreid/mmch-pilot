@@ -5,6 +5,10 @@
 	<section id="question-{{question.id}}" class="question">
 		<h2 class="meta">{{question.user}} on {{question.posted}}</h2>
 		<p class="question-text">{{question.text}}</p>
+		<ul class="nav nav-pills">
+			<li role="presentation" class="active"><a href="{% url 'questions.views.detail' question.id %}">View question</a></li>
+			<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">Answer question</a></li>
+		</ul>
 	</section>
 	<div class="answers-list">
 		{% for answer in answers  %}
