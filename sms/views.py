@@ -17,7 +17,7 @@ def gateway(request):
         r.message('We dont recognize your number: %s' % (twilio_request.from_))
         return r
     question = Question(
-        text = twilio_request.get('Body',none),
+        text = twilio_request.body,
         user = user,
         )
     question.save()
