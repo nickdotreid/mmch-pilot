@@ -14,5 +14,6 @@ urlpatterns = patterns("",
     # There's no favicon here!
     url(r"^favicon.ico$", generic.RedirectView.as_view()),
     url(r'^questions/',include('questions.urls')),
+    url(r'^sms/',include('sms.urls')),
     url(r'^',include('homepage.urls')),
 )
