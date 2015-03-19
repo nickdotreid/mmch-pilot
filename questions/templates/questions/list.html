@@ -1,13 +1,24 @@
 {% extends "base.html" %}
 
 {% block content %}
-	<h1>Questions</h1>
-	<a href="{% url 'questions.views.create' %}" class="btn btn-default">Add a new question</a>
+	<div class="navbar nav">
+		<div class="container">
+			<div class="navbar-header">
+				<h1 class="navbar-brand">Questions</h1>
+			</div>
+			<div class="pull-right">
+				<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">Add a new question</a>
+			</div>
+		</div>
+	</div>
 	{% for question in questions %}
 		<div id="question-{{question.id}}" class="question">
+			<h2 class="meta">{{question.user}} on {{question.posted}}</h2>
 			<p class="question-text">{{question.text}}</p>
-			<p class="meta">{{question.user}} on {{question.posted}}</p>
-			<a href="{% url 'questions.views.detail' question.id %}">View question</a>&nbsp;<a href="{% url 'questions.views.answer' question.id %}">Answer question</a>
+			<ul class="nav nav-pills">
+				<li role="presentation" class=""><a href="{% url 'questions.views.detail' question.id %}">View question</a></li>
+				<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">Answer question</a></li>
+			</ul>
 		</div>
 	{% endfor %}
 {% endblock content %}

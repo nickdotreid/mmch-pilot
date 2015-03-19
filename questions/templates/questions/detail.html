@@ -2,16 +2,16 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	<div id="question-{{question.id}}" class="question">
+	<section id="question-{{question.id}}" class="question">
+		<h2 class="meta">{{question.user}} on {{question.posted}}</h2>
 		<p class="question-text">{{question.text}}</p>
-		<p class="meta">{{question.user}} on {{question.posted}}</p>
-	</div>
+	</section>
 	<div class="answers-list">
 		{% for answer in answers  %}
-		<div class="answer">
+		<section class="answer">
+			<h3 class="meta">{{answer.user}} on {{answer.posted}}</h3>
 			<p class="answer-text text">{{answer.text}}</p>
-			<p class="meta">{{answer.user}} on {{answer.posted}}</p>
-		</div>
+		</section>
 		{% endfor %}
 	</div>
 	{% crispy answer_form %}
