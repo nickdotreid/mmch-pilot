@@ -9,11 +9,12 @@ from questions.models import Question
 def gateway(request):
     twilio_request = decompose(request)
     # if number isn't associated with a user - ask them to register first
+    print twilio_request.from_
     try:
-        user = Number.objects.get(phone_number=twilio_request.get('From',none)).first().user
+        user = Number.objects.get(phone_number=twilio_request.from_).first().user
     except:
         r = twiml.Response()
-        r.message('We dont recognize your number - please register online.')
+        r.message('We dont recognize your number: %s' % (twilio_request.from_))
         return r
     question = Question(
         text = twilio_request.get('Body',none),
