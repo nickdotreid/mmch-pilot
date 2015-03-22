@@ -6,8 +6,9 @@ from twilio import twiml
 from django_twilio.decorators import twilio_view
 from django_twilio.request import decompose
 
-from sms.models import Number
+from sms.models import Number, Message
 from questions.models import Question
+from django.db.models import Q
 
 from django import forms
 from crispy_forms.helper import FormHelper
@@ -34,6 +35,15 @@ class TerminalForm(forms.Form):
                 })
         self.helper.add_input(Submit('submit', 'Send Message'))
 
+def respond_to_message(message):
+    return_message = Message(
+        reciever = message.sender,
+        sender = None,
+        text = 'This is some text',
+        )
+    return_message.save()
+    return return_message
+
 @twilio_view
 def gateway(request):
     twilio_request = decompose(request)
@@ -56,7 +66,8 @@ def gateway(request):
 
 def terminal(request, number=None):
     if number:
-        number = get_object_or_404(Number, phone_number=number).phone_number.as_e164
+        numberObj = get_object_or_404(Number, phone_number=number)
+        number = numberObj.phone_number.as_e164
     form = TerminalForm(number=number)
     if request.POST:
         form = TerminalForm(request.POST, number=number)
@@ -64,9 +75,21 @@ def terminal(request, number=None):
             number, created = Number.objects.get_or_create(
                 phone_number=form.cleaned_data['phone_number']
                 )
+            recieved_message = Message(
+                sender = number,
+                text = form.cleaned_data['message'],
+                )
+            recieved_message.save()
+            return_message = respond_to_message(recieved_message)
             return redirect(reverse(terminal, kwargs={
                 'number':number.phone_number.as_e164,
                 }))
+    messages = []
+    if number:
+        messages = Message.objects.filter(
+            Q(sender=numberObj) | Q(reciever=numberObj)
+            ).all()
     return render_to_response('sms/terminal.html',{
         'form': form,
+        'messages':messages,
         }, context_instance=RequestContext(request))
