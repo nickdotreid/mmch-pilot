@@ -80,7 +80,7 @@ def join_response(sender, text, message, **kwargs):
 		# Split up name into first/last
 		pieces = text.split()
 		user.first_name = pieces.pop(0)
-		user.last_name = ''.join(pieces)
+		user.last_name = ' '.join(pieces)
 		user.save()
 
 		message.reciever.user = user
