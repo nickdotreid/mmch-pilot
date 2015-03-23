@@ -37,24 +37,39 @@ class TerminalForm(forms.Form):
                 })
         self.helper.add_input(Submit('submit', 'Send Message'))
 
+def handle_message(request, number, text):
+    number, created = Number.objects.get_or_create(phone_number=number)
+
+    message = Message(
+        sender = number,
+        text = text,
+        )
+    message.save()
+
+    return_message = Message(
+        reciever = message.sender,
+        sender = None,
+        )
+    return_message.save()
+    message_received.send(
+        sender = request,
+        text = message.text,
+        message = return_message,
+        )
+    return return_message
+
 @twilio_view
 def gateway(request):
     twilio_request = decompose(request)
-    # if number isn't associated with a user - ask them to register first
-    print twilio_request.from_
-    try:
-        user = Number.objects.get(phone_number=twilio_request.from_).user
-    except:
-        r = twiml.Response()
-        r.message('We dont recognize your number: %s' % (twilio_request.from_))
-        return r
-    question = Question(
+    
+    return_message = handle_message(
+        request=request,
+        number = twilio_request.from_,
         text = twilio_request.body,
-        user = user,
         )
-    question.save()
+
     r = twiml.Response()
-    r.message('Your message has been saved')
+    r.message(return_message.text)
     return r
 
 def terminal(request, number=None):
@@ -66,23 +81,12 @@ def terminal(request, number=None):
         form = TerminalForm(request.POST, number=number)
         if form.is_valid():
             number, created = Number.objects.get_or_create(
-                phone_number=form.cleaned_data['phone_number']
+                phone_number=form.cleaned_data['phone_number'],
                 )
-            recieved_message = Message(
-                sender = number,
+            handle_message(
+                request=request,
+                number = form.cleaned_data['phone_number'],
                 text = form.cleaned_data['message'],
-                )
-            recieved_message.save()
-
-            return_message = Message(
-                reciever = recieved_message.sender,
-                sender = None,
-                )
-            return_message.save()
-            message_received.send(
-                sender = request,
-                text = recieved_message.text,
-                message = return_message,
                 )
             return redirect(reverse(terminal, kwargs={
                 'number':number.phone_number.as_e164,
