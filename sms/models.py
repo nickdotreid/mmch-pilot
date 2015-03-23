@@ -8,6 +8,12 @@ from twilio.rest import TwilioRestClient
 
 from twilio import twiml
 
+from random import choice
+from string import ascii_lowercase, digits
+
+from django.db.models.signals import pre_save
+from django.dispatch import receiver, Signal
+
 # Create your models here.
 class Number(Caller):
 
@@ -52,3 +58,26 @@ class Message(models.Model):
 
     def __str__(self):
         pass
+
+class RegistrationPin(models.Model):
+
+    user = models.ForeignKey(User)
+    number = models.ForeignKey(Number)
+    pin = models.CharField(max_length=10)
+    posted = models.DateTimeField(auto_now_add=True)
+
+    def make_pin(self, length=4, chars=digits):
+        pin = ''.join([choice(chars) for i in xrange(length)])
+        try:
+            RegistrationPin.objects.get(pin=pin)
+            return self.make_pin(length=length, chars=chars)
+        except RegistrationPin.DoesNotExist:
+            return pin;
+
+    class Meta:
+        verbose_name = "RegistrationPin"
+        verbose_name_plural = "RegistrationPins"
+
+    def __str__(self):
+        pass
+    

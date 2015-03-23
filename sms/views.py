@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django_twilio.decorators import twilio_view
 from django_twilio.request import decompose
 
-from sms.models import Number, Message
+from sms.models import Number, Message, RegistrationPin
 from questions.models import Question
 from django.db.models import Q
 
@@ -120,7 +120,7 @@ class RegisterForm(forms.Form):
         self.helper.form_action = reverse(register)
         self.helper.add_input(Submit('submit', 'Add Number'))
 
-def register(request, number=None):
+def register(request):
     if not request.user.is_authenticated():
         # Push message that login is required
         return redirect("/")
@@ -129,11 +129,58 @@ def register(request, number=None):
     if request.POST:
         form = RegisterForm(request.POST)
         if form.is_valid():
-            # add pin number
-            # send pin to number
-            return redirect(reverse(register, kwargs={
+            number, created = Number.objects.get_or_create(phone_number=form.cleaned_data['phone_number'])
+            pin = RegistrationPin(
+                number = number,
+                user = request.user,
+                ) 
+            pin.save()
+            message = Message(
+                text = "You pin is %s" % (pin.pin),
+                reciever = number,
+                )
+            message.save()
+            message.send()
+            return redirect(reverse(register_input_pin, kwargs={
                 'number': form.cleaned_data['phone_number'],
                 }))
     return render_to_response('sms/register.html', {
         'form': form,
         }, context_instance=RequestContext(request))
+
+class InputPinForm(forms.Form):
+    pin = forms.CharField()
+
+    def __init__(self, *args, **kwargs):
+        self.number = kwargs.pop('number', None)
+        super(InputPinForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        if self.number:
+            self.helper.form_action = reverse(register_input_pin, kwargs={
+                'number':number
+                })
+        self.helper.add_input(Submit('submit','Enter Pin'))
+
+def register_input_pin(request, number):
+    if not request.user.is_authenticated():
+        # Push message that login is required
+        return redirect("/")
+    number = get_object_or_404(Number, phone_number=number)
+    form = InputPinForm()
+    if request.POST:
+        form = InputPinForm(request.POST)
+        if form.is_valid():
+            pin = form.cleaned_data['pin']
+            if RegistrationPin.objects.filter(
+                pin = pin,
+                number = number,
+                user = request.user
+                ).exists():
+                number.user = request.user
+                number.save()
+                # Add message
+                return redirect("/")
+    return render_to_response('sms/register.html', {
+        'form': form,
+        }, context_instance=RequestContext(request))
+

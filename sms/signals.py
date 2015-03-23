@@ -1,6 +1,7 @@
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver, Signal
 
+from sms.models import RegistrationPin
 from questions.models import Answer, Question, Subscription
 from django.contrib.auth.models import User
 
@@ -104,3 +105,10 @@ def default_message_response(sender, text, message, **kwargs):
 		return True
 	message.text = "Welcome to our SMS program, to join, respond with join."
 	message.save()
+
+@receiver(pre_save, sender=RegistrationPin)
+def set_registration_pin(sender, **kwargs):
+    if not 'created' in kwargs or not kwargs['created']:
+        return False
+    pin = kwargs['instance']
+    pin.pin = make_pin()
