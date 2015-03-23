@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
 # Create your models here.
 class Question(models.Model):
 
@@ -48,5 +51,12 @@ class Subscription(models.Model):
     def __str__(self):
         pass
     
-    
+
+@receiver(post_save, sender=Question)
+def question_add_subscription(sender, **kwargs):
+    question = kwargs['instance']
+    Subscription.objects.get_or_create(
+        question = question,
+        user = question.user,
+        )
     
