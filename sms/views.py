@@ -1,3 +1,5 @@
+from django.conf import settings
+
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
@@ -12,14 +14,24 @@ from django.db.models import Q
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-
-from homepage.views import CustomPhoneNumber
+from phonenumber_field.formfields import PhoneNumberField as DefaultPhoneNumberField
 
 from signals import message_received
 
+class PhoneNumberField(DefaultPhoneNumberField):
+
+    def to_python(self, value):
+        value = ''.join([c for c in value if c in '+1234567890'])
+        if '+' not in value:
+            try:
+                value = settings.DEFAULT_COUNTRY_CODE + value
+            except:
+                pass
+        return super(PhoneNumberField, self).to_python(value)
+
 class TerminalForm(forms.Form):
     message = forms.CharField()
-    phone_number = CustomPhoneNumber()
+    phone_number = PhoneNumberField()
 
     def __init__(self, *args, **kwargs):
         self.number = kwargs.pop('number', None)

@@ -7,23 +7,10 @@ from django.template import RequestContext
 from django import forms
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
-from phonenumber_field.formfields import PhoneNumberField
 
 from sms.models import Number
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login as auth_login, logout as auth_logout
-
-class CustomPhoneNumber(PhoneNumberField):
-
-    def to_python(self, value):
-        value = ''.join([c for c in value if c in '+1234567890'])
-        if '+' not in value:
-            try:
-                value = settings.DEFAULT_COUNTRY_CODE + value
-            except:
-                pass
-        print "####### Number is %s  #######" % (value)
-        return super(PhoneNumberField, self).to_python(value)
 
 class LoginForm(forms.Form):
 
