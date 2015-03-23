@@ -2,7 +2,6 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 
-from twilio import twiml
 from django_twilio.decorators import twilio_view
 from django_twilio.request import decompose
 
@@ -68,9 +67,7 @@ def gateway(request):
         text = twilio_request.body,
         )
 
-    r = twiml.Response()
-    r.message(return_message.text)
-    return r
+    return return_message.as_twml_response()
 
 def terminal(request, number=None):
     if number:

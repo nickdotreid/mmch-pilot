@@ -7,9 +7,6 @@ from django.contrib.auth.models import User
 from random import choice
 from string import ascii_lowercase, digits
 
-from django.conf import settings
-from twilio.rest import TwilioRestClient
-
 message_received = Signal(providing_args=[
 	'text', #Text of recieved message
 	'message', #Response message
@@ -23,13 +20,6 @@ def answer_alert_asker(sender, **kwargs):
 
     if answer.user.id == answer.question.user.id:
     	return False
-
-    client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-    message = client.messages.create(
-        body=answer.text,
-        to= answer.question.user.numbers.first().phone_number.as_e164,
-        from_=settings.TWILIO_DEFAULT_CALLERID,
-    )
 
 @receiver(message_received)
 def handle_question_forum(sender, text, message, **kwargs):
