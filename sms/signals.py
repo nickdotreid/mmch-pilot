@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal
 
-from questions.models import Answer
+from questions.models import Answer, Question
 from django.contrib.auth.models import User
 
 from random import choice
@@ -27,6 +27,26 @@ def answer_alert_asker(sender, **kwargs):
         to= answer.question.user.numbers.first().phone_number.as_e164,
         from_=settings.TWILIO_DEFAULT_CALLERID,
     )
+
+@receiver(message_received)
+def handle_question_forum(sender, text, message, **kwargs):
+	if not message.reciever.user:
+		return False
+	if text.lower() == 'exit':
+		# Check if active subscription for user, if so kill it
+		message.text = "You are not subscribed to a question. To post a new question, just text it to this number."
+		message.save()
+		return True
+	question = Question(
+		text = text,
+		user = message.reciever.user,
+		)
+	question.save()
+	message.text = "You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question."
+	message.save()
+
+
+
 
 def generate_random_username(length=16, chars=ascii_lowercase+digits, split=4, delimiter='-'):
     username = ''.join([choice(chars) for i in xrange(length)])    
