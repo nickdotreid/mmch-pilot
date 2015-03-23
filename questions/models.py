@@ -34,5 +34,19 @@ class Answer(models.Model):
 
     def __str__(self):
         return "Answer by %s" % (self.user)
+
+class Subscription(models.Model):
+
+    question = models.ForeignKey(Question, related_name='subscriptions')
+    user = models.ForeignKey(User, related_name='subscriptions')
+    active = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = "Subscription"
+        verbose_name_plural = "Subscriptions"
+
+    def __str__(self):
+        pass
+    
     
     

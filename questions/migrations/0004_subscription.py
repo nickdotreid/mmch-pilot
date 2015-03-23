@@ -1,0 +1,30 @@
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+
+from django.db import models, migrations
+from django.conf import settings
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        migrations.swappable_dependency(settings.AUTH_USER_MODEL),
+        ('questions', '0003_auto_20150312_0246'),
+    ]
+
+    operations = [
+        migrations.CreateModel(
+            name='Subscription',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('active', models.BooleanField(default=True)),
+                ('question', models.ForeignKey(related_name='subscriptions', to='questions.Question')),
+                ('user', models.ForeignKey(related_name='subscriptions', to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'Subscription',
+                'verbose_name_plural': 'Subscriptions',
+            },
+            bases=(models.Model,),
+        ),
+    ]
