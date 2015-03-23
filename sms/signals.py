@@ -11,8 +11,8 @@ from django.conf import settings
 from twilio.rest import TwilioRestClient
 
 message_received = Signal(providing_args=[
-	'text',
-	'session',
+	'text', #Text of recieved message
+	'message', #Response message
 	])
 
 @receiver(post_save, sender=Answer)
@@ -39,31 +39,37 @@ def generate_random_username(length=16, chars=ascii_lowercase+digits, split=4, d
         return username;
 
 @receiver(message_received)
-def set_name_response(sender, text, session, **kwargs):
-	if sender.reciever.user:
+def join_response(sender, text, message, **kwargs):
+	if message.reciever.user:
 		return False
-	if session.get('SET_NAME'):
+	if sender.session.get('SET_NAME'):
+		# Create new user
 		user = User()
 		user.username = generate_random_username()
+		# Split up name into first/last
 		pieces = text.split()
 		user.first_name = pieces.pop(0)
 		user.last_name = ''.join(pieces)
 		user.save()
-		sender.text = "Your name will be displayed as %s" % (user.get_full_name())
-		sender.save()
+
+		message.reciever.user = user
+		message.reciever.save()
+
+		message.text = "Your name will be displayed as %s" % (user.get_full_name())
+		message.save()
+		return True
 	if text.lower() == 'join':
-		sender.text = "You are joining our system. Please enter your name as you would like it displayed."
-		sender.save()
-		session['SET_NAME'] = True
+		message.text = "You are joining our system. Please enter your name as you would like it displayed."
+		message.save()
+		sender.session['SET_NAME'] = True
 
 @receiver(message_received)
-def default_message_response(sender, text, session, **kwargs):
-	if sender.text:
+def default_message_response(sender, text, message, **kwargs):
+	if message.text:
 		return False
-	if sender.reciever.user:
-		sender.text = "We didn't understand your message."
-		sender.save()
+	if message.reciever.user:
+		message.text = "We didn't understand your message."
+		message.save()
 		return True
-	sender.text = "Welcome to our SMS program, to join, respond with join."
-	sender.save()
-	return True
+	message.text = "Welcome to our SMS program, to join, respond with join."
+	message.save()

@@ -80,9 +80,9 @@ def terminal(request, number=None):
                 )
             return_message.save()
             message_received.send(
-                sender = return_message,
+                sender = request,
                 text = recieved_message.text,
-                session = request.session,
+                message = return_message,
                 )
             return redirect(reverse(terminal, kwargs={
                 'number':number.phone_number.as_e164,
