@@ -1,7 +1,7 @@
 from django.db.models.signals import post_save
 from django.dispatch import receiver, Signal
 
-from questions.models import Answer, Question
+from questions.models import Answer, Question, Subscription
 from django.contrib.auth.models import User
 
 from random import choice
@@ -21,6 +21,9 @@ def answer_alert_asker(sender, **kwargs):
         return False
     answer = kwargs['instance']
 
+    if answer.user.id == answer.question.user.id:
+    	return False
+
     client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
     message = client.messages.create(
         body=answer.text,
@@ -34,7 +37,25 @@ def handle_question_forum(sender, text, message, **kwargs):
 		return False
 	if text.lower() == 'exit':
 		# Check if active subscription for user, if so kill it
+		subscriptions = Subscription.objects.filter(user=message.reciever.user)
+		if subscriptions.exists():
+			subscriptions.first().delete()
+			message.text = "You left the question."
+			message.save()
+			return True
 		message.text = "You are not subscribed to a question. To post a new question, just text it to this number."
+		message.save()
+		return True
+	subscriptions = Subscription.objects.filter(user=message.reciever.user)
+	if subscriptions.exists():
+		question = subscriptions.first().question
+		answer = Answer(
+			text = text,
+			user = message.reciever.user,
+			question = question,
+			)
+		answer.save()
+		message.text = "Your reply has been saved"
 		message.save()
 		return True
 	question = Question(
