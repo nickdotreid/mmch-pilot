@@ -16,6 +16,8 @@ from crispy_forms.layout import Submit
 
 from homepage.views import CustomPhoneNumber
 
+from signals import message_received
+
 class TerminalForm(forms.Form):
     message = forms.CharField()
     phone_number = CustomPhoneNumber()
@@ -34,15 +36,6 @@ class TerminalForm(forms.Form):
                 'number':self.number,
                 })
         self.helper.add_input(Submit('submit', 'Send Message'))
-
-def respond_to_message(message):
-    return_message = Message(
-        reciever = message.sender,
-        sender = None,
-        text = 'This is some text',
-        )
-    return_message.save()
-    return return_message
 
 @twilio_view
 def gateway(request):
@@ -80,7 +73,17 @@ def terminal(request, number=None):
                 text = form.cleaned_data['message'],
                 )
             recieved_message.save()
-            return_message = respond_to_message(recieved_message)
+
+            return_message = Message(
+                reciever = recieved_message.sender,
+                sender = None,
+                )
+            return_message.save()
+            message_received.send(
+                sender = return_message,
+                text = recieved_message.text,
+                session = request.session,
+                )
             return redirect(reverse(terminal, kwargs={
                 'number':number.phone_number.as_e164,
                 }))
