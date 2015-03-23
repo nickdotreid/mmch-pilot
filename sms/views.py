@@ -109,3 +109,31 @@ def terminal(request, number=None):
         'form': form,
         'messages':messages,
         }, context_instance=RequestContext(request))
+
+
+class RegisterForm(forms.Form):
+    phone_number = PhoneNumberField()
+
+    def __init__(self, *args, **kwargs):
+        super(RegisterForm, self).__init__(*args, **kwargs)
+        self.helper = FormHelper()
+        self.helper.form_action = reverse(register)
+        self.helper.add_input(Submit('submit', 'Add Number'))
+
+def register(request, number=None):
+    if not request.user.is_authenticated():
+        # Push message that login is required
+        return redirect("/")
+    # if number & number exists & pin // show pin screen
+    form = RegisterForm()
+    if request.POST:
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            # add pin number
+            # send pin to number
+            return redirect(reverse(register, kwargs={
+                'number': form.cleaned_data['phone_number'],
+                }))
+    return render_to_response('sms/register.html', {
+        'form': form,
+        }, context_instance=RequestContext(request))
