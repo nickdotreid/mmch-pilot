@@ -39,7 +39,6 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     email = forms.EmailField()
-    phone_number = CustomPhoneNumber()
     password = forms.CharField(widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
@@ -94,9 +93,6 @@ def register(request):
         if(form.is_valid()):
             if User.objects.filter(email=form.cleaned_data['email']).exists():
                 # Set message saying email exists
-                pass
-            elif Number.objects.filter(phone_number=form.cleaned_data['phone_number']).exists():
-                # Set message saying phone number exists
                 pass
             else:
                 user = User(
