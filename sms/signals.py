@@ -105,10 +105,3 @@ def default_message_response(sender, text, message, **kwargs):
 		return True
 	message.text = "Welcome to our SMS program, to join, respond with join."
 	message.save()
-
-@receiver(pre_save, sender=RegistrationPin)
-def set_registration_pin(sender, **kwargs):
-    if not 'created' in kwargs or not kwargs['created']:
-        return False
-    pin = kwargs['instance']
-    pin.pin = make_pin()

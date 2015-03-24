@@ -80,4 +80,11 @@ class RegistrationPin(models.Model):
 
     def __str__(self):
         pass
+
+def set_registration_pin(sender, **kwargs):
+    pin = kwargs['instance']
+    if not pin.pin:
+        pin.pin = pin.make_pin()
+pre_save.connect(set_registration_pin, sender=RegistrationPin)
+
     
