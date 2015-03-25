@@ -1,5 +1,7 @@
 from django.conf import settings
 
+from django.utils.translation import ugettext_lazy as _
+
 from django.shortcuts import render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext 
@@ -14,26 +16,26 @@ from django.contrib.auth import authenticate, login as auth_login, logout as aut
 
 class LoginForm(forms.Form):
 
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(label=_("Email"))
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         super(LoginForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_action = reverse(login)
 
-        self.helper.add_input(Submit('submit', 'Login'))
+        self.helper.add_input(Submit('submit', _('Login')))
 
 class RegisterForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(label=_("Email"))
+    password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
         super(RegisterForm, self).__init__(*args, **kwargs)
         self.helper = FormHelper()
         self.helper.form_action = reverse(register)
 
-        self.helper.add_input(Submit('submit', 'Register'))
+        self.helper.add_input(Submit('submit', _('Register')))
 
 
 # Create your views here.

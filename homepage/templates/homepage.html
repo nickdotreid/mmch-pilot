@@ -1,12 +1,16 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 
 {% block content %}
-<h1>Welcome to the mMCH pilot!</h1>
+{# Translators: This is the headline on the front page #}
+<h1>{% trans "Welcome to the mMCH pilot!" %}</h1>
+{# Translators: Welcomeing paragraph #}
+<p>{% trans "This project aims to address information disparities between community health workers and the medical doctors who surpervise them. We hope both parties will use this applicaiton and learn from it." %}</p>
 <div role="tabpanel">
 	<ul class="nav nav-tabs" role="tablist">
-		<li role="presentation" class="active"><a href="#login" role="tab" data-toggle="tab">Login</a></li>
-		<li role="presentation" ><a href="#register" role="tab" data-toggle="tab">Register</a></li>
+		<li role="presentation" class="active"><a href="#login" role="tab" data-toggle="tab">{% trans "Login" %}</a></li>
+		<li role="presentation" ><a href="#register" role="tab" data-toggle="tab">{% trans "Register" %}</a></li>
 	</ul>
 	<div class="tab-content">
 		<div role="tabpanel" class="tab-pane active" id="login">
