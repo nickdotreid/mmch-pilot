@@ -17,7 +17,36 @@ h2{
 	border-top:$gray-lighter 1px solid;
 }
 
-// Bootstrap Starter Template Styles
-body {
-  padding-top: 70px;
+// Layout
+.nav-sidebar{
+	display:none;
+}
+
+@media (min-width: $screen-sm){
+	.nav-sidebar, .main-content{
+		display:block;
+		float:left;
+		.container{
+			width:auto;
+			margin:0px $space-size;
+		}
+	}
+	.nav-sidebar{
+		width: $sidebar-width - $space-size/2;
+	}
+	.main-content{
+		width: $container-tablet - $sidebar-width;
+	}
+}
+
+@media (min-width: $screen-md){
+	.main-content{
+		width: $container-desktop - $sidebar-width - $space-size;
+	}
+}
+
+@media (min-width: $screen-lg){
+	.main-content{
+		width: $container-large-desktop - $sidebar-width - $space-size;
+	}
 }

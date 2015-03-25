@@ -11,3 +11,17 @@ $font-size-h3: $font-size-large;
 $font-size-h4: $font-size-base;
 $font-size-h5: $font-size-base;
 $font-size-h6: $font-size-base;
+
+$space-size: 15px;
+$grid-gutter-width: $space-size/2;
+
+$sidebar-width: 230px;
+
+
+$screen-sm: 650px;
+$screen-md: 992px;
+$screen-lg: $screen-md;
+
+$container-tablet: $screen-sm - $space-size;
+$container-desktop: $screen-md - $space-size*2;
+$container-large-desktop: $screen-lg - $space-size*2;

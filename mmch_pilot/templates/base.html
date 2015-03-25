@@ -19,31 +19,35 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-default navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <a class="navbar-brand" href="/">mMCH</a>
-        </div>
-        {% if user.is_authenticated %}
-        <p class="navbar-text navbar-right">
-          {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}<a href="{% url 'logout' %}" class="btn btn-default">{% trans "Logout" %}</a></p>
-        {% endif %}
-      </div>
-    </nav>
     <div class="container">
-      {% if messages %}
-      <ul class="messages list-unstyled">
-          {% for message in messages %}
-          <li{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</li>
-          {% endfor %}
-      </ul>
-      {% endif %}
-      {% block content %}
-      <h1>Default Template</h1>
-      <p>Yep. This should be replaced.</p>
-      {% endblock %}
+      <nav class="nav nav-sidebar">
+        <div class="container">
+          <div class="navbar-header">
+            <a class="navbar-brand" href="/">mMCH</a>
+          </div>
+          {% if user.is_authenticated %}
+          <p class="navbar-text navbar-right">
+            {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}<a href="{% url 'logout' %}" class="btn btn-default">{% trans "Logout" %}</a></p>
+          {% endif %}
+        </div>
+      </nav>
+      <div class="main-content">
+        <div class="container">
+          {% if messages %}
+          <ul class="messages list-unstyled">
+              {% for message in messages %}
+              <li{% if message.tags %} class="message {{ message.tags }}"{% endif %}>{{ message }}</li>
+              {% endfor %}
+          </ul>
+          {% endif %}
+          {% block content %}
+          <h1>Default Template</h1>
+          <p>Yep. This should be replaced.</p>
+          {% endblock %}
 
-    </div> <!-- /container -->
+        </div> <!-- /container -->
+      </div><!-- /main-content -->
+    </div>
     <script type="text/javascript" src="{% static 'js/vendor.min.js' %}"></script>
   </body>
 </html>
