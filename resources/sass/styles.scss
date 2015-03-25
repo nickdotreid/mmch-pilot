@@ -23,16 +23,24 @@ h2{
 }
 
 @media (min-width: $screen-sm){
+	.container{
+		background-image: url('../img/sidebar.gif');
+		background-position: 0px 0px;
+		background-repeat: repeat-y;
+		padding:0px;
+	}
+
 	.nav-sidebar, .main-content{
 		display:block;
 		float:left;
 		.container{
 			width:auto;
 			margin:0px $space-size;
+			background: transparent;
 		}
 	}
 	.nav-sidebar{
-		width: $sidebar-width - $space-size/2;
+		width: $sidebar-width;
 	}
 	.main-content{
 		width: $container-tablet - $sidebar-width;
