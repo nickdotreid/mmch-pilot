@@ -24,7 +24,8 @@
           <a class="navbar-brand" href="/">mMCH</a>
         </div>
         {% if user.is_authenticated %}
-        <p class="navbar-text navbar-right">Signed in as {{user.email}}. <a href="{% url 'logout' %}" class="navbar-link">Logout</a></p>
+        <p class="navbar-text navbar-right">
+          Signed in as {% if user.get_full_name %}{{user.get_full_name}}{% else %}{{user.email}}{% endif %}. <a href="{% url 'logout' %}" class="navbar-link">Logout</a></p>
         {% endif %}
       </div>
     </nav>
