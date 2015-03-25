@@ -29,6 +29,11 @@ class LoginForm(forms.Form):
 
 class RegisterForm(forms.Form):
     email = forms.EmailField(label=_("Email"))
+    name = forms.CharField(
+        label=_("Display name"),
+        help_text=_("Enter the name that you would like shown to people on this website. This name doesn't need to be unique, but must be less that 20 characters."),
+        max_length=20,
+        )
     password = forms.CharField(label=_("Password"), widget=forms.PasswordInput)
 
     def __init__(self, *args, **kwargs):
@@ -93,13 +98,13 @@ def register(request):
                     email = form.cleaned_data['email'],
                     )
                 user.set_password(form.cleaned_data['password'])
+
+                pieces = form.cleaned_data['name'].split()
+                user.first_name = pieces.pop(0)
+                user.last_name = ' '.join(pieces)
+
                 user.save()
 
-                number = Number(
-                    phone_number = form.cleaned_data['phone_number'],
-                    user = user,
-                    )
-                number.save()
                 user = authenticate(
                     username = form.cleaned_data['email'],
                     password = form.cleaned_data['password'],
