@@ -22,12 +22,13 @@
     <div class="wrap"><div class="container">
       <nav class="nav nav-sidebar">
         <div class="container">
-          <div class="navbar-header">
-            <a class="navbar-brand" href="/">mMCH</a>
+          <div class="">
+            <a class="brand" href="/">mMCH</a>
           </div>
           {% if user.is_authenticated %}
-          <p class="navbar-text navbar-right">
-            {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}<a href="{% url 'logout' %}" class="btn btn-default">{% trans "Logout" %}</a></p>
+          <p class="">
+            {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}</p>
+          <a href="{% url 'logout' %}" class="btn btn-default btn-block">{% trans "Logout" %}</a>
           {% endif %}
         </div>
       </nav>

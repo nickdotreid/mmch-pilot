@@ -9,6 +9,12 @@ h2{
 	font-weight:bold;
 }
 
+.nav-sidebar .brand{
+	display: block;
+	font-size: $font-size-large;
+	padding: $space-size/2 0px;
+}
+
 .navbar h1{
 	margin:0px;
 }
@@ -18,6 +24,17 @@ h2{
 	.meta{
 		font-size: $font-size-base;
 	}
+}
+
+.message{
+	@extend .alert, .alert-info;
+	margin: $space-size/2 0px;
+}
+.message.error{
+	@extend .alert-danger;
+}
+.message.success{
+	@extend .alert-success;
 }
 
 // Layout
