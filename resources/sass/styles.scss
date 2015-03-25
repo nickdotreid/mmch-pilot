@@ -15,6 +15,9 @@ h2{
 
 .question, .answer{
 	border-top:$gray-lighter 1px solid;
+	.meta{
+		font-size: $font-size-base;
+	}
 }
 
 // Layout
