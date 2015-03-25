@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.contrib import messages
 
 from django.utils.translation import ugettext_lazy as _
 
@@ -65,7 +66,10 @@ def login(request):
                 if user is not None:
                     auth_login(request, user)
                     return redirect('/')
+                else:
+                    messages.error(request, _("Your email address and password did't match"))
             except:
+                messages.error(request, _("Your email address wasn't found."))
                 pass
     return render_to_response('main/login.html',{
         'form':form,
@@ -81,7 +85,7 @@ def register(request):
         form = RegisterForm(request.POST)
         if(form.is_valid()):
             if User.objects.filter(email=form.cleaned_data['email']).exists():
-                # Set message saying email exists
+                messages.error(request, _("This email address has already been registered"))
                 pass
             else:
                 user = User(
@@ -103,7 +107,7 @@ def register(request):
                 if user:
                     auth_login(request, user)
                     return redirect(reverse('home'))
-                # add message that something went wrong
+        messages.error(request, _("There was an error on your form, please try again."))
     return render_to_response('main/register.html',{
         'form':form,
         }, context_instance = RequestContext(request))
