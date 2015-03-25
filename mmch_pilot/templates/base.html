@@ -1,4 +1,5 @@
 {% load static %}
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -25,7 +26,7 @@
         </div>
         {% if user.is_authenticated %}
         <p class="navbar-text navbar-right">
-          Signed in as {% if user.get_full_name %}{{user.get_full_name}}{% else %}{{user.email}}{% endif %}. <a href="{% url 'logout' %}" class="navbar-link">Logout</a></p>
+          {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}<a href="{% url 'logout' %}" class="btn btn-default">{% trans "Logout" %}</a></p>
         {% endif %}
       </div>
     </nav>
