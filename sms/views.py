@@ -4,6 +4,8 @@ from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 
+from django.contrib.auth.decorators import login_required
+
 from django_twilio.decorators import twilio_view
 from django_twilio.request import decompose
 
@@ -107,7 +109,7 @@ def terminal(request, number=None):
             ).all()
     return render_to_response('sms/terminal.html',{
         'form': form,
-        'messages':messages,
+        'text_messages':messages,
         }, context_instance=RequestContext(request))
 
 
@@ -120,11 +122,8 @@ class RegisterForm(forms.Form):
         self.helper.form_action = reverse(register)
         self.helper.add_input(Submit('submit', 'Add Number'))
 
+@login_required(login_url='login')
 def register(request):
-    if not request.user.is_authenticated():
-        # Push message that login is required
-        return redirect("/")
-    # if number & number exists & pin // show pin screen
     form = RegisterForm()
     if request.POST:
         form = RegisterForm(request.POST)

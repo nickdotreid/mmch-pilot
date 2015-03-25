@@ -2,7 +2,7 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-	{% for message in messages %}
+	{% for message in text_messages %}
 		<div class="message">
 			<div class="meta"></div>
 			<p class="content">{{message.text}}</p>

@@ -1,6 +1,8 @@
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver, Signal
 
+from django.utils.translation import ugettext_lazy as _
+
 from sms.models import RegistrationPin
 from questions.models import Answer, Question, Subscription
 from django.contrib.auth.models import User
@@ -26,15 +28,16 @@ def answer_alert_asker(sender, **kwargs):
 def handle_question_forum(sender, text, message, **kwargs):
 	if not message.reciever.user:
 		return False
-	if text.lower() == 'exit':
+	# Translators: Word used to exit a conversation
+	if text.lower() == _('exit'):
 		# Check if active subscription for user, if so kill it
 		subscriptions = Subscription.objects.filter(user=message.reciever.user)
 		if subscriptions.exists():
 			subscriptions.first().delete()
-			message.text = "You left the question."
+			message.text = _("You left the question.")
 			message.save()
 			return True
-		message.text = "You are not subscribed to a question. To post a new question, just text it to this number."
+		message.text = _("You are not subscribed to a question. To post a new question, just text it to this number.")
 		message.save()
 		return True
 	subscriptions = Subscription.objects.filter(user=message.reciever.user)
@@ -46,7 +49,7 @@ def handle_question_forum(sender, text, message, **kwargs):
 			question = question,
 			)
 		answer.save()
-		message.text = "Your reply has been saved"
+		message.text = _("Your reply has been saved")
 		message.save()
 		return True
 	question = Question(
@@ -54,7 +57,7 @@ def handle_question_forum(sender, text, message, **kwargs):
 		user = message.reciever.user,
 		)
 	question.save()
-	message.text = "You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question."
+	message.text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
 	message.save()
 
 
@@ -87,11 +90,12 @@ def join_response(sender, text, message, **kwargs):
 		message.reciever.user = user
 		message.reciever.save()
 
-		message.text = "Your name will be displayed as %s" % (user.get_full_name())
+		message.text = _("Your name will be displayed as %s") % (user.get_full_name())
 		message.save()
 		return True
-	if text.lower() == 'join':
-		message.text = "You are joining our system. Please enter your name as you would like it displayed."
+	# Translators: Word used to enter webservice
+	if text.lower() == _('join'):
+		message.text = _("You are joining our system. Please enter your name as you would like it displayed.")
 		message.save()
 		sender.session['SET_NAME'] = True
 
@@ -100,8 +104,8 @@ def default_message_response(sender, text, message, **kwargs):
 	if message.text:
 		return False
 	if message.reciever.user:
-		message.text = "We didn't understand your message."
+		message.text = _("We didn't understand your message.")
 		message.save()
 		return True
-	message.text = "Welcome to our SMS program, to join, respond with join."
+	message.text = _("Welcome to our SMS program, to join, respond with join.")
 	message.save()
