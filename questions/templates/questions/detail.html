@@ -1,19 +1,20 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
+{% load i18n %}
 
 {% block content %}
 	<section id="question-{{question.id}}" class="question">
-		<h2 class="meta">{{question.user}} on {{question.posted}}</h2>
+		<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
 		<p class="question-text">{{question.text}}</p>
 		<ul class="nav nav-pills">
-			<li role="presentation" class="active"><a href="{% url 'questions.views.detail' question.id %}">View question</a></li>
-			<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">Answer question</a></li>
+			<li role="presentation" class="active"><a href="{% url 'questions.views.detail' question.id %}">{% trans "View question" %}</a></li>
+			<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">{% trans "Answer question" %}</a></li>
 		</ul>
 	</section>
 	<div class="answers-list">
 		{% for answer in answers  %}
 		<section class="answer">
-			<h3 class="meta">{{answer.user}} on {{answer.posted}}</h3>
+			<h3 class="meta">{% blocktrans with answer.user as user and answer.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h3>
 			<p class="answer-text text">{{answer.text}}</p>
 		</section>
 		{% endfor %}

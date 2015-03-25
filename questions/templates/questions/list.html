@@ -1,23 +1,24 @@
 {% extends "base.html" %}
+{% load i18n %}
 
 {% block content %}
 	<div class="navbar nav">
 		<div class="container">
 			<div class="navbar-header">
-				<h1 class="navbar-brand">Questions</h1>
+				<h1 class="navbar-brand">{% trans "Questions" %}</h1>
 			</div>
 			<div class="pull-right">
-				<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">Add a new question</a>
+				<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">{% trans "Add a new question" %}</a>
 			</div>
 		</div>
 	</div>
 	{% for question in questions %}
 		<div id="question-{{question.id}}" class="question">
-			<h2 class="meta">{{question.user}} on {{question.posted}}</h2>
+			<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
 			<p class="question-text">{{question.text}}</p>
 			<ul class="nav nav-pills">
-				<li role="presentation" class=""><a href="{% url 'questions.views.detail' question.id %}">View question</a></li>
-				<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">Answer question</a></li>
+				<li role="presentation" class=""><a href="{% url 'questions.views.detail' question.id %}">{% trans "View question" %}</a></li>
+				<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">{% trans "Answer question" %}</a></li>
 			</ul>
 		</div>
 	{% endfor %}

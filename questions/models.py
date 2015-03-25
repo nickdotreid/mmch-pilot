@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+from django.utils.translation import ugettext_lazy as _
+
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 
@@ -13,8 +15,8 @@ class Question(models.Model):
     posted = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Question"
-        verbose_name_plural = "Questions"
+        verbose_name = _("Question")
+        verbose_name_plural = _("Questions")
 
         ordering = ['-posted']
 
@@ -30,8 +32,8 @@ class Answer(models.Model):
     posted = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        verbose_name = "Answer"
-        verbose_name_plural = "Answers"
+        verbose_name = _("Answer")
+        verbose_name_plural = _("Answers")
 
         ordering = ['-posted']
 
@@ -45,8 +47,8 @@ class Subscription(models.Model):
     active = models.BooleanField(default=True)
 
     class Meta:
-        verbose_name = "Subscription"
-        verbose_name_plural = "Subscriptions"
+        verbose_name = _("Subscription")
+        verbose_name_plural = _("Subscriptions")
 
     def __str__(self):
         pass
