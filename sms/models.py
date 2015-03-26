@@ -43,6 +43,9 @@ class Message(models.Model):
     def send(self):
         if not self.reciever:
             return False
+        if settings.TWILIO_DEBUG:
+            print '# MESSAGE TO: %s ## %s' % (self.reciever.phone_number, self.text)
+            return False
         client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
         message = client.messages.create(
             body=self.text,
