@@ -3,7 +3,7 @@ from django.dispatch import receiver, Signal
 
 from django.utils.translation import ugettext_lazy as _
 
-from sms.models import RegistrationPin
+from sms.models import Message, RegistrationPin
 from questions.models import Answer, Question, Subscription
 from django.contrib.auth.models import User
 
@@ -23,6 +23,16 @@ def answer_alert_asker(sender, **kwargs):
 
     if answer.user.id == answer.question.user.id:
     	return False
+    asker = answer.question.user
+    
+    if not asker.numbers.exists():
+    	return False
+    message = Message(
+    	reciever = asker.numbers.first(),
+    	text = "%s: %s" % (answer.user, answer.text),
+    	)
+    message.save()
+    message.send()
 
 @receiver(message_received)
 def handle_question_forum(sender, text, message, **kwargs):
