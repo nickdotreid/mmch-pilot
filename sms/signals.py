@@ -100,7 +100,7 @@ def join_response(sender, text, message, **kwargs):
 		message.reciever.user = user
 		message.reciever.save()
 
-		message.text = _("Your name will be displayed as %s") % (user.get_full_name())
+		message.text = _("Your name will be displayed as %s. You can now post a question by responding to this number.") % (user.get_full_name())
 		message.save()
 		return True
 	# Translators: Word used to enter webservice
