@@ -163,6 +163,7 @@ INSTALLED_APPS = (
     "django.contrib.staticfiles",
     "django.contrib.admin",
     "herokuapp",
+    "rosetta",
     "django_twilio",
     "crispy_forms",
     "sms",

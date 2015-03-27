@@ -10,7 +10,7 @@ urlpatterns = patterns("",
 
     # Admin URLs.
     url(r"^admin/", include(admin.site.urls)),
-    
+    url(r'^rosetta/', include('rosetta.urls')),
     # There's no favicon here!
     url(r"^favicon.ico$", generic.RedirectView.as_view()),
     url(r'^questions/',include('questions.urls')),
