@@ -102,6 +102,15 @@ def answer(request, question_id):
         'form':form,
         }, context_instance = RequestContext(request))
 
+def subscription_processor(request):
+    if not 'questions' in request.path or not request.user:
+        return {}
+    return {
+        'current_subscription_question_ids': [subscription.question.id for subscription in Subscription.objects.filter(
+            user = request.user,
+            ).all()]
+    }
+
 @login_required(login_url="login")
 def subscribe(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
@@ -115,6 +124,20 @@ def subscribe(request, question_id):
             )
         subscription.save()
         messages.success(request, _("You have been subscribed to this question."))
+    return redirect(reverse(detail, kwargs={
+        'question_id':question.id
+        }))
+
+@login_required(login_url="login")
+def unsubscribe(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if question.has_subscriber(request.user):
+        Subscription.objects.filter(
+            user = request.user,
+            question = question,
+            ).delete()
+    messages.success(request, _("You have been unsubscribed from this question."))
     return redirect(reverse(detail, kwargs={
         'question_id':question.id
         }))
