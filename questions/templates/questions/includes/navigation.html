@@ -1,0 +1,10 @@
+{% load i18n %}
+
+<ul class="nav nav-pills">
+	<li role="presentation" class="{% if nav_item and nav_item == 'detail' %}active{% endif %}">
+		<a href="{% url 'questions.views.detail' question.id %}">{% trans "View question" %}</a>
+	</li>
+	<li role="presentation" class="{% if nav_item and nav_item == 'answer' %}active{% endif %}">
+		<a href="{% url 'questions.views.answer' question.id %}">{% trans "Answer question" %}</a>
+	</li>
+</ul>

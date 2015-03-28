@@ -1,25 +1,21 @@
-{% extends "base.html" %}
+{% extends "questions/base.html" %}
 {% load i18n %}
 
-{% block content %}
-	<div class="navbar nav">
-		<div class="container">
-			<div class="navbar-header">
-				<h1 class="navbar-brand">{% trans "Questions" %}</h1>
-			</div>
-			<div class="pull-right">
-				<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">{% trans "Add a new question" %}</a>
-			</div>
-		</div>
+
+{% block questions_navigation %}
+	<div class="pull-right">
+		<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">{% trans "Add a new question" %}</a>
 	</div>
+{% endblock questions_navigation %}
+
+{% block content %}
+	{{ block.super }}
+	<h1>{% trans "All Questions" %}</h1>
 	{% for question in questions %}
 		<div id="question-{{question.id}}" class="question">
 			<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
 			<p class="question-text">{{question.text}}</p>
-			<ul class="nav nav-pills">
-				<li role="presentation" class=""><a href="{% url 'questions.views.detail' question.id %}">{% trans "View question" %}</a></li>
-				<li role="presentation" class=""><a href="{% url 'questions.views.answer' question.id %}">{% trans "Answer question" %}</a></li>
-			</ul>
+			{% include "questions/includes/navigation.html" %}
 		</div>
 	{% endfor %}
 {% endblock content %}
