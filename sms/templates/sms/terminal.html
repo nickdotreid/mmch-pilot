@@ -3,10 +3,7 @@
 
 {% block content %}
 	{% for message in text_messages %}
-		<div class="message">
-			<div class="meta"></div>
-			<p class="content">{{message.text}}</p>
-		</div>
+	{% include "sms/includes/message.html" with message=message %}
 	{% endfor %}
 	{% crispy form %}
 {% endblock content %}
