@@ -7,4 +7,7 @@
 	<li role="presentation" class="{% if nav_item and nav_item == 'answer' %}active{% endif %}">
 		<a href="{% url 'questions.views.answer' question.id %}">{% trans "Answer question" %}</a>
 	</li>
+	<li role="presentation" class="">
+		<a href="{% url 'questions.views.subscribe' question.id %}">{% trans "Subscribe to question" %}</a>
+	</li>
 </ul>

@@ -6,7 +6,7 @@ from django.contrib import messages
 
 from django.contrib.auth.decorators import login_required
 
-from questions.models import Question, Answer
+from questions.models import Question, Answer, Subscription
 
 from django import forms
 from crispy_forms.helper import FormHelper
@@ -101,3 +101,20 @@ def answer(request, question_id):
         'question':question,
         'form':form,
         }, context_instance = RequestContext(request))
+
+@login_required(login_url="login")
+def subscribe(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+
+    if Subscription.objects.filter(user=request.user, question=question).exists():
+        messages.error(request, _("You are already subscribed to this question."))
+    else:
+        subscription = Subscription(
+            user = request.user,
+            question = question,
+            )
+        subscription.save()
+        messages.success(request, _("You have been subscribed to this question."))
+    return redirect(reverse(detail, kwargs={
+        'question_id':question.id
+        }))
