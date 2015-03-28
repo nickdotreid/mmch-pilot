@@ -25,9 +25,21 @@
           <div class="">
             <a class="brand" href="/">mMCH</a>
           </div>
+          <ul class="nav nav-pills">
+            {% block navigation %}
+              {% if user.is_staff %}
+                <li><a href="{% url 'sms_list' %}">Messages</a></li>
+                <li><a href="/admin/">Admin</a></li>
+              {% endif %}
+            {% endblock navigation %}
+          </ul>
           {% if user.is_authenticated %}
-          <p class="">
-            {% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}</p>
+          <p class="">{% blocktrans with user as user %}Signed in as {{user}}.{% endblocktrans %}</p>
+          {% if user.numbers.exists %}
+          <p>Your phone number is {{user.numbers.first.phone_number }}. <a href="{% url 'sms_register' %}">To change your phone number, click here.</a></p>
+          {% else %}
+          <p>You don't have a mobile number set. <a href="{% url 'sms_register' %}">Register a phone number, click here.</a></p>
+          {% endif %}
           <a href="{% url 'logout' %}" class="btn btn-default btn-block">{% trans "Logout" %}</a>
           {% endif %}
         </div>
