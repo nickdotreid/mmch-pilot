@@ -2,10 +2,10 @@
     <div class="meta">
         <span class="date">{{message.sent}}
         {% if message.sender %}
-        From: <a href="#">{{message.sender}}</a>
+        From: <a href="{% url 'sms_terminal' number=message.sender.phone_number %}">{{message.sender}}</a>
         {% endif %}
         {% if message.reciever %}
-        To: <a href="#">{{message.reciever}}</a>
+        To: <a href="{% url 'sms_terminal' number=message.reciever.phone_number %}">{{message.reciever}}</a>
         {% endif %}
     </div>
     <p class="content">{{message.text}}</p>
