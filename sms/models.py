@@ -24,8 +24,10 @@ class Number(Caller):
         verbose_name = "Number"
         verbose_name_plural = "Numbers"
 
-    def __str__(self):
-        pass
+    def __unicode__(self):
+        if self.user:
+            return unicode(self.user)
+        return self.phone_number.as_e164
 
 class Message(models.Model):
 
