@@ -13,7 +13,7 @@ urlpatterns = patterns("",
     url(r'^rosetta/', include('rosetta.urls')),
     # There's no favicon here!
     url(r"^favicon.ico$", generic.RedirectView.as_view()),
-    url(r'^questions/',include('questions.urls')),
+    url(r'^questions/',include('questions.urls', app_name='questions')),
     url(r'^sms/',include('sms.urls')),
     url(r'^',include('homepage.urls')),
 )
