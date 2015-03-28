@@ -36,6 +36,16 @@ def list(request):
         'questions':Question.objects.all(),
         }, context_instance = RequestContext(request))
 
+def list_subscribed(request):
+    return render_to_response('questions/list.html',{
+        'questions':Question.objects.filter(subscriptions__user=request.user).all(),
+        }, context_instance = RequestContext(request))
+
+def list_user_questions(request):
+    return render_to_response('questions/list.html',{
+        'questions':Question.objects.filter(user=request.user).all(),
+        }, context_instance = RequestContext(request))    
+
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render_to_response('questions/detail.html',{
