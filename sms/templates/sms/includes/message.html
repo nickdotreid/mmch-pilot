@@ -1,0 +1,12 @@
+<div class="message {% if message.sender %}message-sent{% endif %} {% if message.reciever %}message-received{% endif %}">
+    <div class="meta">
+        <span class="date">{{message.sent}}
+        {% if message.sender %}
+        From: <a href="#">{{message.sender}}</a>
+        {% endif %}
+        {% if message.reciever %}
+        To: <a href="#">{{message.reciever}}</a>
+        {% endif %}
+    </div>
+    <p class="content">{{message.text}}</p>
+</div>

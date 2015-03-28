@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% for message in text_messages %}
+{% include "sms/includes/message.html" with message=message %}
+{% endfor %}
+
+<div class="pagination">
+    <span class="step-links">
+        {% if text_messages.has_previous %}
+            <a href="?page={{ text_messages.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ text_messages.number }} of {{ text_messages.paginator.num_pages }}.
+        </span>
+
+        {% if text_messages.has_next %}
+            <a href="?page={{ text_messages.next_page_number }}">next</a>
+        {% endif %}
+    </span>
+</div>
+{% endblock content %}
