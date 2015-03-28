@@ -12,7 +12,6 @@ from questions.forms import QuestionForm, AnswerForm
 from django.utils.translation import ugettext_lazy as _
 
 
-@login_required(login_url='login')
 def create(request):
     form = QuestionForm()
     if request.POST:
@@ -32,13 +31,11 @@ def create(request):
         'form':form
         }, context_instance = RequestContext(request))
 
-@login_required(login_url='login')
 def list(request):
     return render_to_response('questions/list.html',{
         'questions':Question.objects.all(),
         }, context_instance = RequestContext(request))
 
-@login_required(login_url='login')
 def detail(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     return render_to_response('questions/detail.html',{
@@ -47,7 +44,6 @@ def detail(request, question_id):
         'answer_form': AnswerForm(question = question),
         }, context_instance = RequestContext(request))
 
-@login_required(login_url='login')
 def answer(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     form = AnswerForm(question = question)
@@ -71,7 +67,6 @@ def answer(request, question_id):
         }, context_instance = RequestContext(request))
 
 
-@login_required(login_url="login")
 def subscribe(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
@@ -88,7 +83,6 @@ def subscribe(request, question_id):
         'question_id':question.id
         }))
 
-@login_required(login_url="login")
 def unsubscribe(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
