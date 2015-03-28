@@ -36,6 +36,9 @@ h2{
 .message.success{
 	@extend .alert-success;
 }
+.message.sent{
+	@extend .alert-success;
+}
 
 // Layout
 .nav-sidebar{

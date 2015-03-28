@@ -1,4 +1,4 @@
-<div class="message {% if message.sender %}message-sent{% endif %} {% if message.reciever %}message-received{% endif %}">
+<div class="message {% if message.sender %}sent{% endif %} {% if message.reciever %}received{% endif %}">
     <div class="meta">
         <span class="date">{{message.sent}}
         {% if message.sender %}
