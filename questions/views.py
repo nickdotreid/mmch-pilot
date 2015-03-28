@@ -106,7 +106,7 @@ def answer(request, question_id):
 def subscribe(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
 
-    if Subscription.objects.filter(user=request.user, question=question).exists():
+    if question.has_subscriber(request.user):
         messages.error(request, _("You are already subscribed to this question."))
     else:
         subscription = Subscription(

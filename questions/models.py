@@ -20,6 +20,10 @@ class Question(models.Model):
 
         ordering = ['-posted']
 
+    def has_subscriber(self, user):
+        # do something to make this cache?
+        return Subscription.objects.filter(user=user, question=self).exists()
+
     def __str__(self):
         return "%s by %s" % (self.text, self.user)
 
