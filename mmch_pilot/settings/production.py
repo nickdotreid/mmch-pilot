@@ -225,6 +225,7 @@ TEMPLATE_CONTEXT_PROCESSORS = (
     "django.core.context_processors.tz",
 #    "django.core.context_processors.request",
     "django.contrib.messages.context_processors.messages",
+    "questions.views.subscription_processor",
 )
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
