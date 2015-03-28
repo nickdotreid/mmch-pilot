@@ -57,6 +57,8 @@ def home(request):
 
 def login(request):
     form = LoginForm()
+    if request.GET.get('next'):
+        request.session['next'] = request.GET.get('next')
     if request.POST:
         form = LoginForm(request.POST)
         if(form.is_valid()):
@@ -70,6 +72,10 @@ def login(request):
                     )
                 if user is not None:
                     auth_login(request, user)
+                    if request.session.get('next'):
+                        next = request.session.get('next')
+                        del request.session['next']
+                        return redirect(next)
                     return redirect('/')
                 else:
                     messages.error(request, _("Your email address and password did't match"))
