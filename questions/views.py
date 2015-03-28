@@ -7,42 +7,10 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
 from questions.models import Question, Answer, Subscription
-
-from django import forms
-from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Submit
+from questions.forms import QuestionForm, AnswerForm
 
 from django.utils.translation import ugettext_lazy as _
 
-
-class QuestionForm(forms.Form):
-
-    text = forms.CharField(label=_("Enter a question that you would like answered"), widget=forms.Textarea)
-
-    def __init__(self, *args, **kwargs):
-        super(QuestionForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        self.helper.form_action = reverse(create)
-
-        self.helper.add_input(Submit('submit', _('Ask Question')))
-
-class AnswerForm(forms.Form):
-    text = forms.CharField(
-        label=_("Enter an answer to the question above"),
-        help_text=_('Your answer must be less than 140 characters'),
-        widget=forms.Textarea,
-        max_length=140,
-        )
-
-    def __init__(self, *args, **kwargs):
-        self.question = kwargs.pop('question', False)
-        super(AnswerForm, self).__init__(*args, **kwargs)
-        self.helper = FormHelper()
-        if self.question:
-            self.helper.form_action = reverse(answer, kwargs={
-                'question_id':self.question.id,
-                })
-        self.helper.add_input(Submit('submit', _('Add an answer')))
 
 @login_required(login_url='login')
 def create(request):
@@ -55,7 +23,7 @@ def create(request):
                 user = request.user,
                 )
             question.save()
-            messaes.success(request, _("Your question has been posted. You will be alerted of each answer."))
+            messages.success(request, _("Your question has been posted. You will be alerted of each answer."))
             return redirect('/questions/%d' % (question.id)) #hack to make it work
             return redirect(detail, kwargs={
                 'question_id':question.id,
@@ -92,7 +60,7 @@ def answer(request, question_id):
                 question = question,
                 )
             answer.save()
-            messages.success(request, _("Your answer has been posted, and we have alerted the original author."))
+            messages.success(request, _("Your answer has been posted."))
             return redirect('/questions/%d' % (question.id)) #hack to make it work
             return redirect(detail, kwargs={
                 'question_id':question.id,
