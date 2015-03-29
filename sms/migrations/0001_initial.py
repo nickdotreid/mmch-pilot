@@ -3,27 +3,69 @@ from __future__ import unicode_literals
 
 from django.db import models, migrations
 from django.conf import settings
+import phonenumber_field.modelfields
 
 
 class Migration(migrations.Migration):
 
     dependencies = [
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
-        ('django_twilio', '0001_initial'),
     ]
 
     operations = [
         migrations.CreateModel(
+            name='Message',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('text', models.CharField(max_length=160, blank=True)),
+                ('sent', models.DateTimeField(auto_now_add=True)),
+            ],
+            options={
+                'verbose_name': 'Message',
+                'verbose_name_plural': 'Messages',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
             name='Number',
             fields=[
-                ('caller_ptr', models.OneToOneField(parent_link=True, auto_created=True, primary_key=True, serialize=False, to='django_twilio.Caller')),
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('phone_number', phonenumber_field.modelfields.PhoneNumberField(max_length=128)),
                 ('active', models.BooleanField(default=True)),
-                ('user', models.ForeignKey(related_name='numbers', to=settings.AUTH_USER_MODEL)),
+                ('blacklist', models.BooleanField(default=False)),
+                ('user', models.ForeignKey(related_name='numbers', blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
             options={
                 'verbose_name': 'Number',
                 'verbose_name_plural': 'Numbers',
             },
-            bases=('django_twilio.caller',),
+            bases=(models.Model,),
+        ),
+        migrations.CreateModel(
+            name='RegistrationPin',
+            fields=[
+                ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
+                ('pin', models.CharField(max_length=10)),
+                ('posted', models.DateTimeField(auto_now_add=True)),
+                ('number', models.ForeignKey(to='sms.Number')),
+                ('user', models.ForeignKey(to=settings.AUTH_USER_MODEL)),
+            ],
+            options={
+                'verbose_name': 'RegistrationPin',
+                'verbose_name_plural': 'RegistrationPins',
+            },
+            bases=(models.Model,),
+        ),
+        migrations.AddField(
+            model_name='message',
+            name='reciever',
+            field=models.ForeignKey(related_name='messages_to', blank=True, to='sms.Number', null=True),
+            preserve_default=True,
+        ),
+        migrations.AddField(
+            model_name='message',
+            name='sender',
+            field=models.ForeignKey(related_name='messages_from', blank=True, to='sms.Number', null=True),
+            preserve_default=True,
         ),
     ]
