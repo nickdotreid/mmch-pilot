@@ -54,6 +54,17 @@ def detail(request, question_id):
         'answer_form': AnswerForm(question = question),
         }, context_instance = RequestContext(request))
 
+def delete(request, question_id):
+    question = get_object_or_404(Question, pk=question_id)
+    if question.user == request.user or request.user.is_staff:
+        question.delete()
+        messages.success(request, _("Question has been deleted."))
+        return redirect(reverse(list))
+    messages.error(request, _("You don't have permission to delete this question."))
+    if 'HTTP_REFERER' in request.META:
+        return redirect(request.META['HTTP_REFERER'])
+    return redirect(reverse(list))
+
 def answer(request, question_id):
     question = get_object_or_404(Question, pk=question_id)
     form = AnswerForm(question = question)

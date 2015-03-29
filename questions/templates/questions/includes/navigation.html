@@ -16,4 +16,9 @@
 		<a href="{% url 'questions.views.subscribe' question.id %}">{% trans "Subscribe to question" %}</a>
 	</li>
 	{% endif %}
+	{% if user.is_staff or question.user == user %}
+	<li role="presentation" class="">
+		<a href="{% url 'questions.views.delete' question.id %}">{% trans "Delete question" %}</a>
+	</li>
+	{% endif %}
 </ul>
