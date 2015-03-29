@@ -1,0 +1,8 @@
+{% load i18n %}
+{% url 'questions_detail' answer.question.id as LINK_URL %}
+{% blocktrans with user=answer.user %}
+{{answer.user}} has responded to a question you are subscribed to.
+
+View the question:
+{{SITE_DOMAIN}}{{LINK_URL}}
+{% endblocktrans %}
