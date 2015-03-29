@@ -96,7 +96,7 @@ def terminal(request, number=None):
     messages = []
     if number:
         messages = Message.objects.filter(
-            Q(sender=numberObj) | Q(reciever=numberObj)
+            Q(sender=numberObj) | Q(receiver=numberObj)
             ).all()
     return render_to_response('sms/terminal.html',{
         'form': form,
@@ -127,7 +127,7 @@ def register(request):
             pin.save()
             message = Message(
                 text = "You pin is %s" % (pin.pin),
-                reciever = number,
+                receiver = number,
                 )
             message.save()
             message.send()

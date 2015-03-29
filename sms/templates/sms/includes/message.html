@@ -1,11 +1,11 @@
-<div class="message {% if message.sender %}sent{% endif %} {% if message.reciever %}received{% endif %}">
+<div class="message {% if message.sender %}sent{% endif %} {% if message.receiver %}received{% endif %}">
     <div class="meta">
         <span class="date">{{message.sent}}
         {% if message.sender %}
         From: <a href="{% url 'sms_terminal' number=message.sender.phone_number %}">{{message.sender}}</a>
         {% endif %}
-        {% if message.reciever %}
-        To: <a href="{% url 'sms_terminal' number=message.reciever.phone_number %}">{{message.reciever}}</a>
+        {% if message.receiver %}
+        To: <a href="{% url 'sms_terminal' number=message.receiver.phone_number %}">{{message.receiver}}</a>
         {% endif %}
     </div>
     <p class="content">{{message.text}}</p>

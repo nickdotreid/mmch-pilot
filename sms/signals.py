@@ -27,7 +27,7 @@ def answer_alert_asker(sender, **kwargs):
     if not asker.numbers.exists():
     	return False
     message = Message(
-    	reciever = asker.numbers.first(),
+    	receiver = asker.numbers.first(),
     	text = "%s: %s" % (answer.user, answer.text),
     	)
     message.save()
@@ -44,7 +44,7 @@ def handle_question_forum(sender, message, **kwargs):
 		if subscriptions.exists():
 			subscriptions.first().delete()
 			response = Message(
-				reciever = message.sender,
+				receiver = message.sender,
 				text = _("You left the question."),
 				response_to = message,
 				)
@@ -53,7 +53,7 @@ def handle_question_forum(sender, message, **kwargs):
 			return True
 		response = Message(
 			response_to = message,
-			reciever = message.sender,
+			receiver = message.sender,
 			text = _("You are not subscribed to a question. To post a new question, just text it to this number.")
 			)
 		response.save()
@@ -70,7 +70,7 @@ def handle_question_forum(sender, message, **kwargs):
 		answer.save()
 		response = Message(
 			response_to = message,
-			reciever = message.sender,
+			receiver = message.sender,
 			text = _("Your reply has been saved")
 			)
 		response.save()
@@ -83,7 +83,7 @@ def handle_question_forum(sender, message, **kwargs):
 	question.save()
 	response = Message(
 		response_to = message,
-		reciever = message.sender,
+		receiver = message.sender,
 		text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
 		)
 	response.save()
@@ -121,7 +121,7 @@ def join_response(sender, message, **kwargs):
 
 		response = Message(
 			response_to = message,
-			reciever = message.sender,
+			receiver = message.sender,
 			text = _("Your name will be displayed as %s. You can now post a question by responding to this number.") % (user.get_full_name()),
 			)
 		response.save()
@@ -131,7 +131,7 @@ def join_response(sender, message, **kwargs):
 	if message.text.lower() == _('join'):
 		response = Message(
 			response_to = message,
-			reciever = message.sender,
+			receiver = message.sender,
 			text = _("You are joining our system. Please enter your name as you would like it displayed."),
 			)
 		response.save()
@@ -145,7 +145,7 @@ def default_message_response(sender, message, **kwargs):
 	if message.sender.user:
 		response = Message(
 			response_to = message,
-			reciever = message.sender,
+			receiver = message.sender,
 			text = _("We didn't understand your message."),
 			)
 		response.save()
@@ -154,7 +154,7 @@ def default_message_response(sender, message, **kwargs):
 		return True
 	response = Message(
 		response_to = message,
-		reciever = message.sender,
+		receiver = message.sender,
 		text = _("Welcome to our SMS program, to join, respond with join."),
 		)
 	response.save()
