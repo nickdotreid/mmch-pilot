@@ -10,6 +10,7 @@ django-rosetta==0.7.5
 django-storages==1.1.8
 httplib2==0.9
 microsofttranslator==0.5
+-e git+https://github.com/marcuz/libpynexmo.git@c2622568760136f3b4c566c3ed48a5dc88935753#egg=nexmomessage-master
 phonenumbers==7.0.2
 polib==1.0.4
 psycopg2==2.6
