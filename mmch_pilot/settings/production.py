@@ -68,12 +68,7 @@ DEFAULT_FILE_STORAGE = "storages.backends.s3boto.S3BotoStorage"
 STATICFILES_STORAGE = "require_s3.storage.OptimizedCachedStaticFilesStorage"
 
 # Telephony Settings.
-DEFAULT_COUNTRY_CODE = os.environ.get("DEFAULT_COUNTRY_CODE", "+1")
 
-TWILIO_ACCOUNT_SID = os.environ.get('TWILIO_ACCOUNT_SID')
-TWILIO_AUTH_TOKEN = os.environ.get('TWILIO_AUTH_TOKEN')
-
-TWILIO_DEFAULT_CALLERID = os.environ.get('TWILIO_DEFAULT_CALLERID')
 
 # Amazon S3 settings.
 
@@ -164,7 +159,6 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "herokuapp",
     "rosetta",
-    "django_twilio",
     "crispy_forms",
     "sms",
     "questions",

@@ -4,9 +4,6 @@ from django.contrib.auth.models import User
 from django_twilio.models import Caller
 
 from django.conf import settings
-from twilio.rest import TwilioRestClient
-
-from twilio import twiml
 
 from random import choice
 from string import ascii_lowercase, digits
