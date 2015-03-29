@@ -106,7 +106,8 @@ def generate_random_username(length=16, chars=ascii_lowercase+digits, split=4, d
 def join_response(sender, message, **kwargs):
 	if message.sender.user:
 		return False
-	if sender.session.get('SET_NAME'):
+	join_text = _("You are joining our system. Please enter your name as you would like it displayed.")
+	if message.response_to and message.response_to.text == join_text:
 		# Create new user
 		user = User()
 		user.username = generate_random_username()
@@ -132,11 +133,10 @@ def join_response(sender, message, **kwargs):
 		response = Message(
 			response_to = message,
 			receiver = message.sender,
-			text = _("You are joining our system. Please enter your name as you would like it displayed."),
+			text = join_text,
 			)
 		response.save()
 		response.send()
-		sender.session['SET_NAME'] = True
 
 @receiver(message_received)
 def default_message_response(sender, message, **kwargs):
