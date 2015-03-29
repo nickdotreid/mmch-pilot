@@ -33,7 +33,7 @@ class Message(models.Model):
 
     # Idea is that System messages are NULL
     sender = models.ForeignKey(Number, null=True, blank=True, related_name='messages_from')
-    reciever = models.ForeignKey(Number, null=True, blank=True, related_name='messages_to')
+    receiver = models.ForeignKey(Number, null=True, blank=True, related_name='messages_to')
 
     text = models.CharField(max_length=160, blank=True)
     sent = models.DateTimeField(auto_now_add=True)
@@ -45,17 +45,17 @@ class Message(models.Model):
         verbose_name_plural = 'Messages'
 
     def send(self):
-        if not self.reciever:
+        if not self.receiver:
             return False
         if settings.NEXMO_DEBUG:
-            print '# MESSAGE TO: %s ## %s' % (self.reciever.phone_number, self.text)
+            print '# MESSAGE TO: %s ## %s' % (self.receiver.phone_number, self.text)
             return True
         sms = NexmoMessage({
             'reqtype': 'json',
             'api_key': settings.NEXMO_API_KEY,
             'api_secret': settings.NEXMO_API_SECRET_KEY,
             'from': settings.NEXMO_DEFAULT_CALLERID,
-            'to': self.reciever.phone_number.as_e164,
+            'to': self.receiver.phone_number.as_e164,
             'text': self.text,
             })
         sms.set_text_info(self.text) #Why do I do this twice?
