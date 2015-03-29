@@ -70,8 +70,8 @@ STATICFILES_STORAGE = "require_s3.storage.OptimizedCachedStaticFilesStorage"
 # Telephony Settings.
 DEFAULT_COUNTRY_CODE = os.environ.get("DEFAULT_COUNTRY_CODE", "+1")
 
-NEXMO_ACCOUNT_SID = os.environ.get('NEXMO_ACCOUNT_SID')
-NEXMO_AUTH_TOKEN = os.environ.get('NEXMO_AUTH_TOKEN')
+NEXMO_API_KEY = os.environ.get('NEXMO_API_KEY')
+NEXMO_API_SECRET_KEY = os.environ.get('NEXMO_API_SECRET_KEY')
 
 NEXMO_DEFAULT_CALLERID = os.environ.get('NEXMO_DEFAULT_CALLERID')
 

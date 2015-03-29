@@ -1,9 +1,10 @@
-from django.db import models
+from django.conf import settings
 
+from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
-from django.conf import settings
+from nexmomessage import NexmoMessage
 
 from random import choice
 from string import ascii_lowercase, digits
@@ -44,21 +45,21 @@ class Message(models.Model):
     def send(self):
         if not self.reciever:
             return False
-        if settings.TWILIO_DEBUG:
+        if settings.NEXMO_DEBUG:
             print '# MESSAGE TO: %s ## %s' % (self.reciever.phone_number, self.text)
             return False
-        client = TwilioRestClient(settings.TWILIO_ACCOUNT_SID, settings.TWILIO_AUTH_TOKEN)
-        message = client.messages.create(
-            body=self.text,
-            to= self.reciever.phone_number.as_e164,
-            from_=settings.TWILIO_DEFAULT_CALLERID,
-        )
-        return True
+        sms = NexmoMessage({
+            'reqtype': 'json',
+            'api_key': settings.NEXMO_API_KEY,
+            'api_secret': settings.NEXMO_API_SECRET_KEY,
+            'from': settings.NEXMO_DEFAULT_CALLERID,
+            'to': self.reciever.phone_number.as_e164,
+            'text': self.text,
+            })
+        sms.set_text_info(self.text) #Why do I do this twice?
+        sms.send_request()
 
-    def as_twml_response(self):
-        r = twiml.Response()
-        r.message(self.text)
-        return r
+        return True
 
     def __str__(self):
         pass
