@@ -47,7 +47,7 @@ class Message(models.Model):
             return False
         if settings.NEXMO_DEBUG:
             print '# MESSAGE TO: %s ## %s' % (self.reciever.phone_number, self.text)
-            return False
+            return True
         sms = NexmoMessage({
             'reqtype': 'json',
             'api_key': settings.NEXMO_API_KEY,
@@ -57,9 +57,7 @@ class Message(models.Model):
             'text': self.text,
             })
         sms.set_text_info(self.text) #Why do I do this twice?
-        sms.send_request()
-
-        return True
+        return sms.send_request()
 
     def __str__(self):
         pass

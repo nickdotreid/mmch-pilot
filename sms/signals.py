@@ -11,8 +11,8 @@ from random import choice
 from string import ascii_lowercase, digits
 
 message_received = Signal(providing_args=[
-	'text', #Text of recieved message
-	'message', #Response message
+	'responded', #Boolean if message has been responded to
+	'message', #Received message
 	])
 
 @receiver(post_save, sender=Answer)
@@ -35,41 +35,60 @@ def answer_alert_asker(sender, **kwargs):
     message.send()
 
 @receiver(message_received)
-def handle_question_forum(sender, text, message, **kwargs):
-	if not message.reciever.user:
+def handle_question_forum(sender, responded, message, **kwargs):
+	if not message.sender.user:
 		return False
 	# Translators: Word used to exit a conversation
-	if text.lower() == _('exit'):
+	if message.text.lower() == _('exit'):
 		# Check if active subscription for user, if so kill it
-		subscriptions = Subscription.objects.filter(user=message.reciever.user)
+		subscriptions = Subscription.objects.filter(user=message.sender.user)
 		if subscriptions.exists():
 			subscriptions.first().delete()
-			message.text = _("You left the question.")
-			message.save()
+			response = Message(
+				reciever = message.sender,
+				text = _("You left the question.")
+				)
+			response.save()
+			response.send()
+			responded = True
 			return True
-		message.text = _("You are not subscribed to a question. To post a new question, just text it to this number.")
-		message.save()
+		response = Message(
+			reciever = message.sender,
+			text = _("You are not subscribed to a question. To post a new question, just text it to this number.")
+			)
+		response.save()
+		response.send()
+		responded = True
 		return True
-	subscriptions = Subscription.objects.filter(user=message.reciever.user)
+	subscriptions = Subscription.objects.filter(user=message.sender.user)
 	if subscriptions.exists():
 		question = subscriptions.first().question
 		answer = Answer(
-			text = text,
-			user = message.reciever.user,
+			text = message.text,
+			user = message.sender.user,
 			question = question,
 			)
 		answer.save()
-		message.text = _("Your reply has been saved")
-		message.save()
+		response = Message(
+			reciever = message.sender,
+			text = _("Your reply has been saved")
+			)
+		response.save()
+		response.send()
+		responded = True
 		return True
 	question = Question(
-		text = text,
-		user = message.reciever.user,
+		text = message.text,
+		user = message.sender.user,
 		)
 	question.save()
-	message.text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
-	message.save()
-
+	response = Message(
+		reciever = message.sender,
+		text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
+		)
+	response.save()
+	response.send()
+	responded = True
 
 
 
@@ -84,38 +103,59 @@ def generate_random_username(length=16, chars=ascii_lowercase+digits, split=4, d
         return username;
 
 @receiver(message_received)
-def join_response(sender, text, message, **kwargs):
-	if message.reciever.user:
+def join_response(sender, responded, message, **kwargs):
+	if message.sender.user:
 		return False
 	if sender.session.get('SET_NAME'):
 		# Create new user
 		user = User()
 		user.username = generate_random_username()
 		# Split up name into first/last
-		pieces = text.split()
+		pieces = message.text.split()
 		user.first_name = pieces.pop(0)
 		user.last_name = ' '.join(pieces)
 		user.save()
 
-		message.reciever.user = user
-		message.reciever.save()
+		message.sender.user = user
+		message.sender.save()
 
-		message.text = _("Your name will be displayed as %s. You can now post a question by responding to this number.") % (user.get_full_name())
-		message.save()
+		response = Message(
+			reciever = message.sender,
+			text = _("Your name will be displayed as %s. You can now post a question by responding to this number.") % (user.get_full_name()),
+			)
+		response.save()
+		response.send()
+		responded = True
 		return True
 	# Translators: Word used to enter webservice
-	if text.lower() == _('join'):
-		message.text = _("You are joining our system. Please enter your name as you would like it displayed.")
-		message.save()
+	if message.text.lower() == _('join'):
+		response = Message(
+			reciever = message.sender,
+			text = _("You are joining our system. Please enter your name as you would like it displayed."),
+			)
+		response.save()
+		response.send()
+		responded = True
 		sender.session['SET_NAME'] = True
 
 @receiver(message_received)
-def default_message_response(sender, text, message, **kwargs):
-	if message.text:
+def default_message_response(sender, responded, message, **kwargs):
+	if responded:
 		return False
-	if message.reciever.user:
-		message.text = _("We didn't understand your message.")
-		message.save()
+	if message.sender.user:
+		response = Message(
+			reciever = message.sender,
+			text = _("We didn't understand your message."),
+			)
+		response.save()
+		response.send()
+		responded = True
 		return True
-	message.text = _("Welcome to our SMS program, to join, respond with join.")
+	response = Message(
+		reciever = message.sender,
+		text = _("Welcome to our SMS program, to join, respond with join."),
+		)
+	response.save()
+	response.send()
+	responded = True
 	message.save()

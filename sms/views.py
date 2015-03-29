@@ -58,22 +58,23 @@ def handle_message(request, number, text):
         )
     message.save()
 
-    return_message = Message(
-        reciever = message.sender,
-        sender = None,
-        )
-    return_message.save()
+    responded = False
     message_received.send(
         sender = request,
-        text = message.text,
-        message = return_message,
+        responded = False,
+        message = message,
         )
-    return return_message
+    return message
 
 def gateway(request):
     # Decode Variables
-    # Handle Message
-    # Send response (do I really need this?)
+    if 'msisdn' not in request.GET or 'text' not in request.GET:
+        return HttpResponse(status=400)
+    handle_message(
+        request = request,
+        number = '+'+request.GET['msisdn'],
+        text = request.GET['text'],
+        )
     return HttpResponse(status=200)
 
 def terminal(request, number=None):
@@ -84,16 +85,13 @@ def terminal(request, number=None):
     if request.POST:
         form = TerminalForm(request.POST, number=number)
         if form.is_valid():
-            number, created = Number.objects.get_or_create(
-                phone_number=form.cleaned_data['phone_number'],
-                )
             handle_message(
                 request=request,
                 number = form.cleaned_data['phone_number'],
                 text = form.cleaned_data['message'],
                 )
             return redirect(reverse(terminal, kwargs={
-                'number':number.phone_number.as_e164,
+                'number':number,
                 }))
     messages = []
     if number:
