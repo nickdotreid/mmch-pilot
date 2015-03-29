@@ -1,7 +1,7 @@
 from django.db import models
 
 from django.contrib.auth.models import User
-from django_twilio.models import Caller
+from phonenumber_field.modelfields import PhoneNumberField
 
 from django.conf import settings
 
@@ -12,10 +12,12 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver, Signal
 
 # Create your models here.
-class Number(Caller):
+class Number(models.Model):
 
-    user = models.ForeignKey(User, related_name='numbers', blank=True, null=True)
+    phone_number = PhoneNumberField()
     active = models.BooleanField(default=True)
+    blacklist = models.BooleanField(default=False)
+    user = models.ForeignKey(User, related_name='numbers', blank=True, null=True)
 
     class Meta:
         verbose_name = "Number"

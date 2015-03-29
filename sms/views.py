@@ -1,14 +1,12 @@
 from django.conf import settings
 
 from django.shortcuts import get_object_or_404, render_to_response, redirect
+from django.http import HttpResponse
 from django.core.urlresolvers import reverse
 from django.template import RequestContext
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.contrib.auth.decorators import login_required
-
-from django_twilio.decorators import twilio_view
-from django_twilio.request import decompose
 
 from sms.models import Number, Message, RegistrationPin
 from questions.models import Question
@@ -72,17 +70,11 @@ def handle_message(request, number, text):
         )
     return return_message
 
-@twilio_view
 def gateway(request):
-    twilio_request = decompose(request)
-    
-    return_message = handle_message(
-        request=request,
-        number = twilio_request.from_,
-        text = twilio_request.body,
-        )
-
-    return return_message.as_twml_response()
+    # Decode Variables
+    # Handle Message
+    # Send response (do I really need this?)
+    return HttpResponse(status=200)
 
 def terminal(request, number=None):
     if number:
