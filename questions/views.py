@@ -33,17 +33,23 @@ def create(request):
 
 def list(request):
     return render_to_response('questions/list.html',{
-        'questions':Question.objects.all(),
+        'questions':Question.objects.filter(published=True).all(),
         }, context_instance = RequestContext(request))
 
 def list_subscribed(request):
     return render_to_response('questions/list.html',{
-        'questions':Question.objects.filter(subscriptions__user=request.user).all(),
+        'questions':Question.objects.filter(
+            subscriptions__user=request.user,
+            published=True,
+            ).all(),
         }, context_instance = RequestContext(request))
 
 def list_user_questions(request):
     return render_to_response('questions/list.html',{
-        'questions':Question.objects.filter(user=request.user).all(),
+        'questions':Question.objects.filter(
+            user=request.user,
+            published=True,
+            ).all(),
         }, context_instance = RequestContext(request))    
 
 def detail(request, question_id):

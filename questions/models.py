@@ -13,6 +13,7 @@ class Question(models.Model):
     user = models.ForeignKey(User, related_name='questions')
     
     posted = models.DateTimeField(auto_now_add=True)
+    published = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _("Question")
@@ -61,8 +62,9 @@ class Subscription(models.Model):
 @receiver(post_save, sender=Question)
 def question_add_subscription(sender, **kwargs):
     question = kwargs['instance']
-    Subscription.objects.get_or_create(
-        question = question,
-        user = question.user,
-        )
+    if question.published:
+        Subscription.objects.get_or_create(
+            question = question,
+            user = question.user,
+            )
     
