@@ -37,6 +37,26 @@ def answer_alert_asker(sender, **kwargs):
 def handle_question_forum(sender, message, **kwargs):
 	if not message.sender.user:
 		return False
+	question_text = _("Confirm that you wanted to post your last message as a question by texting YES.")
+	if message.response_to and message.response_to.text == question_text:
+		if message.text.lower() == _('yes'):
+			# publish question
+			response = Message(
+				response_to = message,
+				receiver = message.sender,
+				text = _('Your question has been published. text EXIT to leave question.'),
+				)
+			response.save()
+			response.send()
+			return True
+		response = Message(
+			response_to = message,
+			receiver = message.sender,
+			text = _('Your question has not been published.'),
+			)
+		response.save()
+		response.send()
+		return True
 	# Translators: Word used to exit a conversation
 	if message.text.lower() == _('exit'):
 		# Check if active subscription for user, if so kill it
@@ -84,7 +104,7 @@ def handle_question_forum(sender, message, **kwargs):
 	response = Message(
 		response_to = message,
 		receiver = message.sender,
-		text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
+		text = question_text
 		)
 	response.save()
 	response.send()

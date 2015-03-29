@@ -103,7 +103,7 @@ def terminal(request, number=None):
     if number:
         messages = Message.objects.filter(
             Q(sender=numberObj) | Q(receiver=numberObj)
-            ).all()
+            ).all().reverse()
     return render_to_response('sms/terminal.html',{
         'form': form,
         'text_messages':messages,

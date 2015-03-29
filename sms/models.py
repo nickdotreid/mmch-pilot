@@ -43,6 +43,7 @@ class Message(models.Model):
     class Meta:
         verbose_name= 'Message'
         verbose_name_plural = 'Messages'
+        ordering = ['-sent','id']
 
     def send(self):
         if not self.receiver:
