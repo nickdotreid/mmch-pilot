@@ -38,6 +38,8 @@ class Message(models.Model):
     text = models.CharField(max_length=160, blank=True)
     sent = models.DateTimeField(auto_now_add=True)
 
+    response_to = models.ForeignKey("Message", null=True, blank=True, related_name='responses')
+
     class Meta:
         verbose_name= 'Message'
         verbose_name_plural = 'Messages'
@@ -58,6 +60,9 @@ class Message(models.Model):
             })
         sms.set_text_info(self.text) #Why do I do this twice?
         return sms.send_request()
+
+    def responded_to(self):
+        return self.responses.exists()
 
     def __str__(self):
         pass

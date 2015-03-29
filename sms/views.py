@@ -61,7 +61,6 @@ def handle_message(request, number, text):
     responded = False
     message_received.send(
         sender = request,
-        responded = False,
         message = message,
         )
     return message
@@ -85,13 +84,14 @@ def terminal(request, number=None):
     if request.POST:
         form = TerminalForm(request.POST, number=number)
         if form.is_valid():
+            numberObj, created = Number.objects.get_or_create(phone_number=form.cleaned_data['phone_number'])
             handle_message(
                 request=request,
                 number = form.cleaned_data['phone_number'],
                 text = form.cleaned_data['message'],
                 )
             return redirect(reverse(terminal, kwargs={
-                'number':number,
+                'number':numberObj.phone_number.as_e164,
                 }))
     messages = []
     if number:

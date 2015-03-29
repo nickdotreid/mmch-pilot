@@ -11,7 +11,6 @@ from random import choice
 from string import ascii_lowercase, digits
 
 message_received = Signal(providing_args=[
-	'responded', #Boolean if message has been responded to
 	'message', #Received message
 	])
 
@@ -35,7 +34,7 @@ def answer_alert_asker(sender, **kwargs):
     message.send()
 
 @receiver(message_received)
-def handle_question_forum(sender, responded, message, **kwargs):
+def handle_question_forum(sender, message, **kwargs):
 	if not message.sender.user:
 		return False
 	# Translators: Word used to exit a conversation
@@ -46,19 +45,19 @@ def handle_question_forum(sender, responded, message, **kwargs):
 			subscriptions.first().delete()
 			response = Message(
 				reciever = message.sender,
-				text = _("You left the question.")
+				text = _("You left the question."),
+				response_to = message,
 				)
 			response.save()
 			response.send()
-			responded = True
 			return True
 		response = Message(
+			response_to = message,
 			reciever = message.sender,
 			text = _("You are not subscribed to a question. To post a new question, just text it to this number.")
 			)
 		response.save()
 		response.send()
-		responded = True
 		return True
 	subscriptions = Subscription.objects.filter(user=message.sender.user)
 	if subscriptions.exists():
@@ -70,12 +69,12 @@ def handle_question_forum(sender, responded, message, **kwargs):
 			)
 		answer.save()
 		response = Message(
+			response_to = message,
 			reciever = message.sender,
 			text = _("Your reply has been saved")
 			)
 		response.save()
 		response.send()
-		responded = True
 		return True
 	question = Question(
 		text = message.text,
@@ -83,6 +82,7 @@ def handle_question_forum(sender, responded, message, **kwargs):
 		)
 	question.save()
 	response = Message(
+		response_to = message,
 		reciever = message.sender,
 		text = _("You have just posted a question. Any further text messages will be counted as a response. Text EXIT, to leave question.")
 		)
@@ -103,7 +103,7 @@ def generate_random_username(length=16, chars=ascii_lowercase+digits, split=4, d
         return username;
 
 @receiver(message_received)
-def join_response(sender, responded, message, **kwargs):
+def join_response(sender, message, **kwargs):
 	if message.sender.user:
 		return False
 	if sender.session.get('SET_NAME'):
@@ -120,30 +120,31 @@ def join_response(sender, responded, message, **kwargs):
 		message.sender.save()
 
 		response = Message(
+			response_to = message,
 			reciever = message.sender,
 			text = _("Your name will be displayed as %s. You can now post a question by responding to this number.") % (user.get_full_name()),
 			)
 		response.save()
 		response.send()
-		responded = True
 		return True
 	# Translators: Word used to enter webservice
 	if message.text.lower() == _('join'):
 		response = Message(
+			response_to = message,
 			reciever = message.sender,
 			text = _("You are joining our system. Please enter your name as you would like it displayed."),
 			)
 		response.save()
 		response.send()
-		responded = True
 		sender.session['SET_NAME'] = True
 
 @receiver(message_received)
-def default_message_response(sender, responded, message, **kwargs):
-	if responded:
+def default_message_response(sender, message, **kwargs):
+	if message.responded_to():
 		return False
 	if message.sender.user:
 		response = Message(
+			response_to = message,
 			reciever = message.sender,
 			text = _("We didn't understand your message."),
 			)
@@ -152,10 +153,9 @@ def default_message_response(sender, responded, message, **kwargs):
 		responded = True
 		return True
 	response = Message(
+		response_to = message,
 		reciever = message.sender,
 		text = _("Welcome to our SMS program, to join, respond with join."),
 		)
 	response.save()
 	response.send()
-	responded = True
-	message.save()
