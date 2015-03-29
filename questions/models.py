@@ -61,6 +61,8 @@ class Subscription(models.Model):
 
 @receiver(post_save, sender=Question)
 def question_add_subscription(sender, **kwargs):
+    if not 'created' in kwargs or not kwargs['created']:
+        return False
     question = kwargs['instance']
     if question.published:
         Subscription.objects.get_or_create(

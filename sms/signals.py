@@ -40,7 +40,13 @@ def handle_question_forum(sender, message, **kwargs):
 	question_text = _("Confirm that you wanted to post your last message as a question by texting YES.")
 	if message.response_to and message.response_to.text == question_text:
 		if message.text.lower() == _('yes'):
-			# publish question
+			question = Question.objects.filter(user = message.sender.user).first()
+			question.published = True
+			question.save()
+			Subscription.objects.get_or_create(
+	            question = question,
+	            user = message.sender.user,
+	            )
 			response = Message(
 				response_to = message,
 				receiver = message.sender,
@@ -99,6 +105,7 @@ def handle_question_forum(sender, message, **kwargs):
 	question = Question(
 		text = message.text,
 		user = message.sender.user,
+		published = False,
 		)
 	question.save()
 	response = Message(
