@@ -65,7 +65,11 @@ class Message(models.Model):
         return self.responses.exists()
 
     def __str__(self):
-        pass
+        if self.sender:
+            return "From %s: %s" % (self.sender, self.text)
+        if self.receiver:
+            return "To %s: %s" % (self.receiver, self.text)
+        return self.text
 
 class RegistrationPin(models.Model):
 

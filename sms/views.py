@@ -1,4 +1,6 @@
 from django.conf import settings
+import datetime
+from django.utils import timezone
 
 from django.shortcuts import get_object_or_404, render_to_response, redirect
 from django.http import HttpResponse
@@ -56,6 +58,10 @@ def handle_message(request, number, text):
         sender = number,
         text = text,
         )
+    time = timezone.now() - datetime.timedelta(minutes=5)
+    previous_message_query = Message.objects.filter(sent__gte=time, receiver=number)
+    if previous_message_query.exists():
+        message.response_to = previous_message_query.first()
     message.save()
 
     responded = False
