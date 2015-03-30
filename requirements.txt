@@ -2,7 +2,6 @@ boto==2.36.0
 dj-database-url==0.3.0
 Django==1.7.6
 django-crispy-forms==1.4.0
-django-herokuapp==0.9.19
 django-phonenumber-field==0.7.2
 django-require==1.0.7
 django-require-s3==1.0.0
