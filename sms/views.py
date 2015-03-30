@@ -73,13 +73,12 @@ def handle_message(request, number, text):
 
 def gateway(request):
     # Decode Variables
-    if 'msisdn' not in request.GET or 'text' not in request.GET:
-        return HttpResponse(status=400)
-    handle_message(
-        request = request,
-        number = '+'+request.GET['msisdn'],
-        text = request.GET['text'],
-        )
+    if 'msisdn' in request.GET or 'text' in request.GET:
+        handle_message(
+            request = request,
+            number = '+'+request.GET['msisdn'],
+            text = request.GET['text'],
+            )
     return HttpResponse(status=200)
 
 def terminal(request, number=None):
