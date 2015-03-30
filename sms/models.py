@@ -12,6 +12,8 @@ from string import ascii_lowercase, digits
 from django.db.models.signals import pre_save
 from django.dispatch import receiver, Signal
 
+from django.utils.encoding import force_unicode
+
 # Create your models here.
 class Number(models.Model):
 
@@ -57,9 +59,9 @@ class Message(models.Model):
             'api_secret': settings.NEXMO_API_SECRET_KEY,
             'from': settings.NEXMO_DEFAULT_CALLERID,
             'to': self.receiver.phone_number.as_e164,
-            'text': self.text,
+            'text': force_unicode(self.text),
             })
-        sms.set_text_info(self.text) #Why do I do this twice?
+        sms.set_text_info(force_unicode(self.text)) #Why do I do this twice?
         return sms.send_request()
 
     def responded_to(self):
