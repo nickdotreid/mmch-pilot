@@ -13,7 +13,7 @@
 		<p class="question-text">{{question.text}}</p>
 	</section>
 	<div class="answers-list">
-		{% for answer in answers  %}
+		{% for answer in answers.reverse  %}
 		<section class="answer">
 			<h3 class="meta">{% blocktrans with answer.user as user and answer.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h3>
 			<p class="answer-text text">{{answer.text}}</p>
