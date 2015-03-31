@@ -9,11 +9,13 @@
 
 {% block content %}
 	{{ block.super }}
+	<div class="questions-list">
 	{% for question in questions %}
 		<div id="question-{{question.id}}" class="question">
 			<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
-			<p class="question-text">{{question.text}}</p>
+			<p class="question-text text">{{question.text}}</p>
 			{% include "questions/includes/navigation.html" %}
 		</div>
 	{% endfor %}
+	</div>
 {% endblock content %}

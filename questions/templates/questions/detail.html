@@ -8,17 +8,19 @@
 
 {% block content %}
 	{{block.super}}
-	<section id="question-{{question.id}}" class="question">
-		<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
-		<p class="question-text">{{question.text}}</p>
-	</section>
-	<div class="answers-list">
-		{% for answer in answers.reverse  %}
-		<section class="answer">
-			<h3 class="meta">{% blocktrans with answer.user as user and answer.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h3>
-			<p class="answer-text text">{{answer.text}}</p>
+	<div class="question-detail">
+		<section id="question-{{question.id}}" class="question">
+			<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
+			<p class="question-text text">{{question.text}}</p>
 		</section>
-		{% endfor %}
+		<div class="answers-list">
+			{% for answer in answers.reverse  %}
+			<section class="answer">
+				<h3 class="meta">{% blocktrans with answer.user as user and answer.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h3>
+				<p class="answer-text text">{{answer.text}}</p>
+			</section>
+			{% endfor %}
+		</div>
+		{% crispy answer_form %}
 	</div>
-	{% crispy answer_form %}
 {% endblock content %}

@@ -20,10 +20,28 @@ h2{
 }
 
 .question, .answer{
-	border-top:$gray-lighter 1px solid;
-	.meta{
-		font-size: $font-size-base;
-	}
+	margin-bottom:$space-size/2;
+}
+
+.questions-list, .answers-list{
+	.question, .answer{
+		border-bottom:$gray-lighter 1px solid;
+		margin:$space-size 0px;
+		.meta, .text{
+			padding:$space-size/2 $space-size;
+		}
+		.meta{
+			font-size: $font-size-base;
+			margin:0px;
+			background-color: $gray-lighter;
+		}
+	}	
+}
+
+.question-detail .question{
+	background-color: $gray-lighter;
+	font-size: $font-size-large;
+	padding:$space-size/2 $space-size;
 }
 
 .message{

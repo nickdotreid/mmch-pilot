@@ -8,9 +8,11 @@
 
 {% block content %}
 	{{ block.super }}
-	<div id="question-{{question.id}}" class="question">
-		<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
-		<p class="question-text text">{{question.text}}</p>
+	<div class="question-detail">
+		<div id="question-{{question.id}}" class="question">
+			<h2 class="meta">{% blocktrans with question.user as user and question.posted as date %}{{user}} on {{date}}{% endblocktrans %}</h2>
+			<p class="question-text text">{{question.text}}</p>
+		</div>
+		{% crispy form %}
 	</div>
-	{% crispy form %}
 {% endblock content %}
