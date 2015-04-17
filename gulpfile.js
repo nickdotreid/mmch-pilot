@@ -35,7 +35,7 @@ gulp.task('css', function() { 
 
 gulp.task('js', function(){
 	gulp.src('')
-		.pipe(addsrc(config.bowerDir+'/jquery/dist/jquery.js'))
+		.pipe(addsrc(config.bowerDir+'/jquery/dist/jquery.min.js'))
 		.pipe(addsrc(config.bowerDir + '/bootstrap-sass-official/assets/javascripts/bootstrap/tab.js'))
 		.pipe(uglify())
 		.pipe(concat("vendor.min.js"))
