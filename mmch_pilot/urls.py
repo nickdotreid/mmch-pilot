@@ -15,5 +15,6 @@ urlpatterns = patterns("",
     url(r"^favicon.ico$", generic.RedirectView.as_view()),
     url(r'^questions/',include('questions.urls', app_name='questions')),
     url(r'^sms/',include('sms.urls')),
+    url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^',include('homepage.urls')),
 )

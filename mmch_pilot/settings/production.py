@@ -150,8 +150,11 @@ USE_TZ = True
 LOCALE_PATHS = (
     os.path.join(BASE_DIR, 'locale'),
 )
-print(LOCALE_PATHS)
 
+
+LANGUAGES = (
+    ('en', 'English'),
+    )
 
 # A list of additional installed applications.
 
