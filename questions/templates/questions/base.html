@@ -1,15 +1,6 @@
 {% extends "base.html" %}
 {% load i18n %}
 
-{% block navigation %}
-	{% url 'questions_list' as nav_url %}
-	<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">All Questions</a></li>
-	{% url 'questions_list_subscribed' as nav_url %}
-	<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">Subscribed Questions</a></li>
-	{% url 'questions_list_user_questions' as nav_url %}
-	<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">Your Questions</a></li>
-{% endblock navigation %}
-
 {% block content %}
 <div class="navbar nav">
 	<div class="container">

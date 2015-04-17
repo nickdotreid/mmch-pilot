@@ -5,6 +5,16 @@
 	<div class="pull-right">
 		<a href="{% url 'questions.views.create' %}" class="btn btn-default navbar-btn">{% trans "Add a new question" %}</a>
 	</div>
+	<ul class="nav nav-pills">
+		{% url 'questions_list' as nav_url %}
+		<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">All Questions</a></li>
+		{% url 'questions_list_subscribed' as nav_url %}
+		<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">Subscribed Questions</a></li>
+		{% url 'questions_list_user_questions' as nav_url %}
+		<li class="{% if request.path == nav_url %}active{% endif %}"><a href="{{nav_url}}">Your Questions</a></li>
+	</ul>
+
+
 {% endblock questions_navigation %}
 
 {% block content %}
