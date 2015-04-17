@@ -9,11 +9,11 @@
 	</li>
 	{% if question.id in current_subscription_question_ids %}
 	<li role="presentation" class="">
-		<a href="{% url 'questions.views.unsubscribe' question.id %}">{% trans "Unsubscribe to question" %}</a>
+		<a href="{% url 'questions.views.unsubscribe' question.id %}">{% trans "Leave question" %}</a>
 	</li>
 	{% else %}
 	<li role="presentation" class="">
-		<a href="{% url 'questions.views.subscribe' question.id %}">{% trans "Subscribe to question" %}</a>
+		<a href="{% url 'questions.views.subscribe' question.id %}">{% trans "Join question" %}</a>
 	</li>
 	{% endif %}
 	{% if user.is_staff or question.user == user %}
