@@ -167,6 +167,7 @@ INSTALLED_APPS = (
     "django.contrib.admin",
     "rosetta",
     "crispy_forms",
+    "sendsms",
     "sms",
     "questions",
     "homepage",

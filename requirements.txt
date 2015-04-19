@@ -6,6 +6,7 @@ django-phonenumber-field==0.7.2
 django-require==1.0.7
 django-require-s3==1.0.0
 django-rosetta==0.7.5
+django-sendsms==0.2.2
 django-storages==1.1.8
 httplib2==0.9
 microsofttranslator==0.5

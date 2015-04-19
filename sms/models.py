@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from phonenumber_field.modelfields import PhoneNumberField
 
-from nexmomessage import NexmoMessage
+from sendsms import api
 
 from random import choice
 from string import ascii_lowercase, digits
@@ -50,19 +50,11 @@ class Message(models.Model):
     def send(self):
         if not self.receiver:
             return False
-        if settings.NEXMO_DEBUG:
-            print '# MESSAGE TO: %s ## %s' % (self.receiver.phone_number, self.text)
-            return True
-        sms = NexmoMessage({
-            'reqtype': 'json',
-            'api_key': settings.NEXMO_API_KEY,
-            'api_secret': settings.NEXMO_API_SECRET_KEY,
-            'from': settings.NEXMO_DEFAULT_CALLERID,
-            'to': self.receiver.phone_number.as_e164,
-            'text': force_unicode(self.text),
-            })
-        sms.set_text_info(force_unicode(self.text)) #Why do I do this twice?
-        return sms.send_request()
+        return api.send_sms(
+            body = force_unicode(self.text),
+            to = [self.receiver.phone_number.as_e164],
+            from_phone = settings.FROM_PHONE_NUMBER,
+            )
 
     def responded_to(self):
         return self.responses.exists()
