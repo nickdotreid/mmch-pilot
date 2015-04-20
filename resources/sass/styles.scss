@@ -9,6 +9,16 @@ h2{
 	font-weight:bold;
 }
 
+.navbar-small{
+	@extend .navbar;
+	@extend .navbar-default;
+	@extend .navbar-inverse;
+	font-size: $font-size-small;
+	.container{
+		padding:$space-size 0px;
+	}
+}
+
 .nav-sidebar .brand{
 	display: block;
 	font-size: $font-size-large;
