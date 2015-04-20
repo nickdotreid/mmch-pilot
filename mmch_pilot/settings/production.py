@@ -139,7 +139,7 @@ SEND_BROKEN_LINK_EMAILS = False
 
 TIME_ZONE = "UTC"
 
-LANGUAGE_CODE = "en-gb"
+LANGUAGE_CODE = "en"
 
 USE_I18N = True
 
@@ -186,6 +186,7 @@ STATICFILES_DIRS = (
 MIDDLEWARE_CLASSES = (
     "django.middleware.gzip.GZipMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
