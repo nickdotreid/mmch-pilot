@@ -81,6 +81,15 @@ def gateway(request):
             )
     return HttpResponse(status=200)
 
+def kookoo_gateway(request):
+    if 'cid' in request.GET and 'message' in request.GET:
+        handle_message(
+            request = request,
+            number = '+'+request.GET['cid'],
+            text = request.GET['message'],
+            )
+    return HttpResponse(status=200)
+
 def terminal(request, number=None):
     if number:
         numberObj = get_object_or_404(Number, phone_number=number)
